@@ -1,0 +1,24 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<!DOCTYPE bookProfile [
+    <!ELEMENT bookProfile (isbn, title, subtitle, authorId, publisherId, yearPublished, pageCount, description)>
+    <!ELEMENT isbn (#PCDATA)>
+    <!ELEMENT title (#PCDATA)>
+    <!ELEMENT subtitle (#PCDATA)>
+    <!ELEMENT authorId (#PCDATA)>
+    <!ELEMENT publisherId (#PCDATA)>
+    <!ELEMENT yearPublished (#PCDATA)>
+    <!ELEMENT pageCount (#PCDATA)>
+    <!ELEMENT description (#PCDATA)>
+]>
+
+<bookProfile>
+    <isbn>1234567890</isbn>
+    <title>Clean Architecture</title>
+    <subtitle>A Craftsman'sGuide to Software Structure and Design</subtitle>
+    <authorId>1</authorId>
+    <publisherId>1</publisherId>
+    <yearPublished>2012</yearPublished>
+    <pageCount>404</pageCount>
+    <description>The description of the book</description>
+</bookProfile>
