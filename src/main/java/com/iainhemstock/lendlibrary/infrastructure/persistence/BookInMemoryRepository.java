@@ -1,8 +1,8 @@
 package com.iainhemstock.lendlibrary.infrastructure.persistence;
 
-import com.iainhemstock.lendlibrary.domain.books.entities.Book;
-import com.iainhemstock.lendlibrary.domain.books.valueobjects.BookId;
-import com.iainhemstock.lendlibrary.interfaces.repository.BookRepository;
+import com.iainhemstock.lendlibrary.domain.model.books.Book;
+import com.iainhemstock.lendlibrary.domain.model.books.BookId;
+import com.iainhemstock.lendlibrary.domain.model.books.BookRepository;
 
 import java.util.*;
 

@@ -1,8 +1,8 @@
 package com.iainhemstock.lendlibrary.infrastructure.persistence;
 
-import com.iainhemstock.lendlibrary.domain.transactions.entities.BookLoan;
-import com.iainhemstock.lendlibrary.domain.transactions.valueobjects.LoanId;
-import com.iainhemstock.lendlibrary.interfaces.repository.BookLoanRepository;
+import com.iainhemstock.lendlibrary.domain.model.transactions.BookLoan;
+import com.iainhemstock.lendlibrary.domain.model.transactions.LoanId;
+import com.iainhemstock.lendlibrary.domain.model.transactions.BookLoanRepository;
 
 public class BookLoanInMemoryRepository implements BookLoanRepository {
     @Override

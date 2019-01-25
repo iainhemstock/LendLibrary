@@ -1,8 +1,8 @@
 package com.iainhemstock.lendlibrary.infrastructure.persistence;
 
-import com.iainhemstock.lendlibrary.domain.accounts.entities.Account;
-import com.iainhemstock.lendlibrary.domain.accounts.valueobjects.AccountId;
-import com.iainhemstock.lendlibrary.interfaces.repository.AccountRepository;
+import com.iainhemstock.lendlibrary.domain.model.accounts.Account;
+import com.iainhemstock.lendlibrary.domain.model.accounts.AccountId;
+import com.iainhemstock.lendlibrary.domain.model.accounts.AccountRepository;
 
 import java.util.ArrayList;
 import java.util.Iterator;
