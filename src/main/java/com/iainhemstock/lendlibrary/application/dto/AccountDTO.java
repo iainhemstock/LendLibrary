@@ -1,6 +1,9 @@
 package com.iainhemstock.lendlibrary.application.dto;
 
-public class NewAccountDTO {
+import java.util.Objects;
+
+public class AccountDTO {
+    private final String accountId;
     private final String firstName;
     private final String lastName;
     private final String address1;
@@ -11,10 +14,12 @@ public class NewAccountDTO {
     private final String contactNumber;
     private final String email;
 
-    public NewAccountDTO(String firstName, String lastName,
-                         String address1, String address2, String city, String county, String postcode,
-                         String contactNumber, String email) {
+    public AccountDTO(String accountId,
+                      String firstName, String lastName,
+                      String address1, String address2, String city, String county, String postcode,
+                      String contactNumber, String email) {
 
+        this.accountId = accountId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address1 = address1;
@@ -24,6 +29,10 @@ public class NewAccountDTO {
         this.postcode = postcode;
         this.contactNumber = contactNumber;
         this.email = email;
+    }
+
+    public String getAccountId() {
+        return accountId;
     }
 
     public String getFirstName() {
@@ -64,8 +73,9 @@ public class NewAccountDTO {
 
     @Override
     public String toString() {
-        return "NewAccountDTO{" +
-                "firstName='" + firstName + '\'' +
+        return "AccountDTO{" +
+                "accountId='" + accountId + '\'' +
+                ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", address1='" + address1 + '\'' +
                 ", address2='" + address2 + '\'' +
@@ -75,5 +85,27 @@ public class NewAccountDTO {
                 ", contactNumber='" + contactNumber + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AccountDTO that = (AccountDTO) o;
+        return Objects.equals(accountId, that.accountId) &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(lastName, that.lastName) &&
+                Objects.equals(address1, that.address1) &&
+                Objects.equals(address2, that.address2) &&
+                Objects.equals(city, that.city) &&
+                Objects.equals(county, that.county) &&
+                Objects.equals(postcode, that.postcode) &&
+                Objects.equals(contactNumber, that.contactNumber) &&
+                Objects.equals(email, that.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(accountId, firstName, lastName, address1, address2, city, county, postcode, contactNumber, email);
     }
 }

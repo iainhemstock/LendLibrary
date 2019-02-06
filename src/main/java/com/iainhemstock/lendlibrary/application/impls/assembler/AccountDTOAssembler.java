@@ -1,21 +1,21 @@
 package com.iainhemstock.lendlibrary.application.impls.assembler;
 
-import com.iainhemstock.lendlibrary.application.dto.ExistingAccountDTO;
+import com.iainhemstock.lendlibrary.application.dto.AccountDTO;
 import com.iainhemstock.lendlibrary.domain.model.accounts.Account;
 import com.iainhemstock.lendlibrary.domain.model.accounts.PersonProfile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExistingAccountDTOAssembler {
+public class AccountDTOAssembler {
 
-    public List<ExistingAccountDTO> toDTOList(List<Account> accounts) {
-        List<ExistingAccountDTO> dtos = new ArrayList<>();
+    public List<AccountDTO> toDTOList(List<Account> accounts) {
+        List<AccountDTO> dtos = new ArrayList<>();
 
         for (Account account : accounts) {
             PersonProfile personProfile = account.getPersonProfile();
 
-            final ExistingAccountDTO dto = new ExistingAccountDTO(
+            final AccountDTO dto = new AccountDTO(
                     account.getId().toString(),
                     personProfile.getFullName().getFirstName().toString(),
                     personProfile.getFullName().getLastName().toString(),
@@ -31,7 +31,7 @@ public class ExistingAccountDTOAssembler {
         return dtos;
     }
 
-    public ExistingAccountDTO toDTO(Account account) {
+    public AccountDTO toDTO(Account account) {
         return toDTOList(List.of(account)).get(0);
     }
 }

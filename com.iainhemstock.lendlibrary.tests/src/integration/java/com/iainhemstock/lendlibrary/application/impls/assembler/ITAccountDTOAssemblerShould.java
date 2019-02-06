@@ -1,6 +1,6 @@
 package com.iainhemstock.lendlibrary.application.impls.assembler;
 
-import com.iainhemstock.lendlibrary.application.dto.ExistingAccountDTO;
+import com.iainhemstock.lendlibrary.application.dto.AccountDTO;
 import com.iainhemstock.lendlibrary.domain.model.accounts.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-public class ITExistingAccountDTOAssemblerShould {
+public class ITAccountDTOAssemblerShould {
 
     private static final String ACC1_ACCOUNT_ID = "9ba0d1ad-cb44-4ca4-bb0b-a0b9cab13d97";
     private static final String ACC1_FIRST_NAME = "Jane";
@@ -36,18 +36,18 @@ public class ITExistingAccountDTOAssemblerShould {
     private static final String ACC2_CONTACT_NUMBER = "01992967603";
     private static final String ACC2_EMAIL = "jsmith@gmail.com";
 
-    private ExistingAccountDTOAssembler assembler;
+    private AccountDTOAssembler assembler;
 
     @Before
     public void setUp() throws Exception {
-        assembler = new ExistingAccountDTOAssembler();
+        assembler = new AccountDTOAssembler();
     }
 
     @Test
     public void return_empty_list_when_no_accounts_exist() {
         List<Account> emptyAccountsList = new ArrayList<>();
-        List<ExistingAccountDTO> actualDTOs = assembler.toDTOList(emptyAccountsList);
-        List<ExistingAccountDTO> expectedDTOs = new ArrayList<>();
+        List<AccountDTO> actualDTOs = assembler.toDTOList(emptyAccountsList);
+        List<AccountDTO> expectedDTOs = new ArrayList<>();
 
         assertThat(actualDTOs, is(equalTo(expectedDTOs)));
     }
@@ -55,8 +55,8 @@ public class ITExistingAccountDTOAssemblerShould {
     @Test
     public void return_list_of_accounts_converted_to_dtos() {
         List<Account> accounts = makeAccounts();
-        List<ExistingAccountDTO> expectedDTOs = makeExpectedDTOs();
-        List<ExistingAccountDTO> actualDTOs = assembler.toDTOList(accounts);
+        List<AccountDTO> expectedDTOs = makeExpectedDTOs();
+        List<AccountDTO> actualDTOs = assembler.toDTOList(accounts);
         assertThat(actualDTOs, is(equalTo(expectedDTOs)));
     }
 
@@ -64,7 +64,7 @@ public class ITExistingAccountDTOAssemblerShould {
     public void return_account_converted_to_dto() {
         Account alisonMarlowAccount = getAlisonMarlowAccount();
 
-        ExistingAccountDTO accountDTO = assembler.toDTO(alisonMarlowAccount);
+        AccountDTO accountDTO = assembler.toDTO(alisonMarlowAccount);
 
         FullName fullName = alisonMarlowAccount.getPersonProfile().getFullName();
         Address address = alisonMarlowAccount.getPersonProfile().getAddress();
@@ -90,14 +90,14 @@ public class ITExistingAccountDTOAssemblerShould {
                 "01619487013", "alisonmarlow@gmail.com");
     }
 
-    private List<ExistingAccountDTO> makeExpectedDTOs() {
+    private List<AccountDTO> makeExpectedDTOs() {
         return List.of(
-                new ExistingAccountDTO(
+                new AccountDTO(
                         ACC1_ACCOUNT_ID,
                         ACC1_FIRST_NAME, ACC1_LAST_NAME,
                         ACC1_ADDRESS1, ACC1_ADDRESS2, ACC1_CITY, ACC1_COUNTY, ACC1_POSTCODE,
                         ACC1_CONTACT_NUMBER, ACC1_EMAIL),
-                new ExistingAccountDTO(
+                new AccountDTO(
                         ACC2_ACCOUNT_ID,
                         ACC2_FIRST_NAME, ACC2_LAST_NAME,
                         ACC2_ADDRESS1, ACC2_ADDRESS2, ACC2_CITY, ACC2_COUNTY, ACC2_POSTCODE,

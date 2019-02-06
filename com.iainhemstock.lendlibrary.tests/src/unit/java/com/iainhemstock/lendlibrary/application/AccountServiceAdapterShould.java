@@ -1,13 +1,10 @@
 package com.iainhemstock.lendlibrary.application;
 
-import com.iainhemstock.lendlibrary.application.dto.ExistingAccountDTO;
-import com.iainhemstock.lendlibrary.application.dto.NewAccountDTO;
-import com.iainhemstock.lendlibrary.application.impls.assembler.ExistingAccountDTOAssembler;
+import com.iainhemstock.lendlibrary.application.dto.AccountDTO;
+import com.iainhemstock.lendlibrary.application.impls.assembler.AccountDTOAssembler;
 import com.iainhemstock.lendlibrary.domain.model.accounts.*;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
@@ -21,17 +18,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public abstract class AccountServiceAdapterShould {
 
     @Rule public MockitoRule rule = MockitoJUnit.rule();
     @Mock protected AccountFactory accountFactory;
     @Mock protected AccountRepository accountRepository;
-    @Mock protected ExistingAccountDTOAssembler existingAccountDTOAssembler;
+    @Mock protected AccountDTOAssembler accountDTOAssembler;
 
     protected abstract AccountServiceAdapter getAccountServiceAdapter();
     protected abstract AccountServiceAdapter getAccountServiceAdapterWithNullFactory();
@@ -125,12 +119,12 @@ public abstract class AccountServiceAdapterShould {
         when(accountRepository.nextId()).thenReturn(accountId);
         when(accountRepository.getById(any(AccountId.class))).thenReturn(account);
         when(accountId.toString()).thenReturn("id-1234");
-        when(existingAccountDTOAssembler.toDTO(account)).thenReturn(getAlisonMarlowExistingAccountDTO("id-1234"));
+        when(accountDTOAssembler.toDTO(account)).thenReturn(getAlisonMarlowAccountDTO("id-1234"));
 
-        NewAccountDTO alisonMarlowAccountDTO = getAlisonMarlowNewAccountDTO();
+        AccountDTO alisonMarlowAccountDTO = getAlisonMarlowNewAccountDTO();
         String accountIdStr = getAccountServiceAdapter().openAccount(alisonMarlowAccountDTO);
 
-        ExistingAccountDTO accountDTO = getAccountServiceAdapter().fetchAccount(accountIdStr);
+        AccountDTO accountDTO = getAccountServiceAdapter().fetchAccount(accountIdStr);
 
         assertThat(accountDTO.getAccountId(), is(equalTo(accountIdStr)));
         assertThat(accountDTO.getFirstName(), is(equalTo(alisonMarlowAccountDTO.getFirstName())));
@@ -151,31 +145,31 @@ public abstract class AccountServiceAdapterShould {
 
     @Test
     public void return_details_of_all_accounts() {
-        ExistingAccountDTO alisonMarlowExistingAccountDTO = getAlisonMarlowExistingAccountDTO("id-1234");
-        ExistingAccountDTO colinHartExistingAccountDTO = getColinHartExistingAccountDTO("id-5678");
+        AccountDTO alisonMarlowExistingAccountDTO = getAlisonMarlowAccountDTO("id-1234");
+        AccountDTO colinHartExistingAccountDTO = getColinHartExistingAccountDTO("id-5678");
 
         List<Account> accountsList = List.of(Mockito.mock(Account.class), Mockito.mock(Account.class));
         when(accountRepository.getAll()).thenReturn(accountsList);
-        when(existingAccountDTOAssembler.toDTOList(accountsList))
+        when(accountDTOAssembler.toDTOList(accountsList))
                 .thenReturn(List.of(alisonMarlowExistingAccountDTO, colinHartExistingAccountDTO));
 
-        List<ExistingAccountDTO> allFetchedAccountDTOs = getAccountServiceAdapter().fetchAllAccounts();
+        List<AccountDTO> allFetchedAccountDTOs = getAccountServiceAdapter().fetchAllAccounts();
 
         verify(accountRepository).getAll();
-        verify(existingAccountDTOAssembler).toDTOList(accountsList);
+        verify(accountDTOAssembler).toDTOList(accountsList);
         assertThat(allFetchedAccountDTOs.get(0), is(equalTo(alisonMarlowExistingAccountDTO)));
         assertThat(allFetchedAccountDTOs.get(1), is(equalTo(colinHartExistingAccountDTO)));
     }
 
-    private NewAccountDTO getAlisonMarlowNewAccountDTO() {
-        return new NewAccountDTO(
+    private AccountDTO getAlisonMarlowNewAccountDTO() {
+        return new AccountDTO(null,
                 "Alison", "Marlow",
                 "1 Ross Avenue", "Levenshulme", "Manchester", "Greater Manchester", "M192HW",
                 "01619487013", "alisonmarlow@gmail.com");
     }
 
-    private ExistingAccountDTO getAlisonMarlowExistingAccountDTO(final String accountId) {
-        return new ExistingAccountDTO(
+    private AccountDTO getAlisonMarlowAccountDTO(final String accountId) {
+        return new AccountDTO(
                 accountId,
                 getAlisonMarlowNewAccountDTO().getFirstName(), getAlisonMarlowNewAccountDTO().getLastName(),
                 getAlisonMarlowNewAccountDTO().getAddress1(), getAlisonMarlowNewAccountDTO().getAddress2(),
@@ -184,8 +178,8 @@ public abstract class AccountServiceAdapterShould {
                 getAlisonMarlowNewAccountDTO().getContactNumber(), getAlisonMarlowNewAccountDTO().getEmail());
     }
 
-    private ExistingAccountDTO getColinHartExistingAccountDTO(String accountId) {
-        return new ExistingAccountDTO(
+    private AccountDTO getColinHartExistingAccountDTO(String accountId) {
+        return new AccountDTO(
                 accountId,
                 "John", "Smith",
                 "456 The Avenue", "Great Parndon", "Harlow", "Essex", "CM194HG",

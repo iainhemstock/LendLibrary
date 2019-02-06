@@ -1,9 +1,8 @@
 package com.iainhemstock.lendlibrary.application;
 
-import com.iainhemstock.lendlibrary.application.dto.ExistingAccountDTO;
-import com.iainhemstock.lendlibrary.application.dto.NewAccountDTO;
+import com.iainhemstock.lendlibrary.application.dto.AccountDTO;
 import com.iainhemstock.lendlibrary.application.impls.DefaultAccountServiceAdapter;
-import com.iainhemstock.lendlibrary.application.impls.assembler.ExistingAccountDTOAssembler;
+import com.iainhemstock.lendlibrary.application.impls.assembler.AccountDTOAssembler;
 import com.iainhemstock.lendlibrary.domain.model.accounts.AccountFactory;
 import com.iainhemstock.lendlibrary.domain.model.accounts.AccountId;
 import com.iainhemstock.lendlibrary.infrastructure.persistence.AccountRepositoryMemory;
@@ -26,17 +25,17 @@ public class ITAccountServiceAdapterShould {
     public void setUp() {
         testableAccountRepository = new TestableAccountRepository();
         AccountFactory accountFactory = new AccountFactory();
-        ExistingAccountDTOAssembler existingAccountDTOAssembler = new ExistingAccountDTOAssembler();
-        accountServiceAdapter = new DefaultAccountServiceAdapter(testableAccountRepository, accountFactory, existingAccountDTOAssembler);
+        AccountDTOAssembler accountDTOAssembler = new AccountDTOAssembler();
+        accountServiceAdapter = new DefaultAccountServiceAdapter(testableAccountRepository, accountFactory, accountDTOAssembler);
     }
 
     @Test
     public void open_new_account() {
-        final NewAccountDTO alisonMarlowAccountDTO = getAlisonMarlowNewAccountDTO();
+        final AccountDTO alisonMarlowAccountDTO = getAlisonMarlowNewAccountDTO();
 
         final String alisonMarlowAccountId = accountServiceAdapter.openAccount(alisonMarlowAccountDTO);
-        final ExistingAccountDTO fetchedAccountDTO = accountServiceAdapter.fetchAccount(alisonMarlowAccountId);
-        final List<ExistingAccountDTO> allFetchedAccountDTOs = accountServiceAdapter.fetchAllAccounts();
+        final AccountDTO fetchedAccountDTO = accountServiceAdapter.fetchAccount(alisonMarlowAccountId);
+        final List<AccountDTO> allFetchedAccountDTOs = accountServiceAdapter.fetchAllAccounts();
 
         assertThat(alisonMarlowAccountId, is(equalTo(testableAccountRepository.getLastId().toString())));
         assertThat(fetchedAccountDTO.getAccountId(), is(equalTo(alisonMarlowAccountId)));
@@ -53,8 +52,8 @@ public class ITAccountServiceAdapterShould {
         assertThat(allFetchedAccountDTOs.get(0), is(equalTo(fetchedAccountDTO)));
     }
 
-    private NewAccountDTO getAlisonMarlowNewAccountDTO() {
-        return new NewAccountDTO(
+    private AccountDTO getAlisonMarlowNewAccountDTO() {
+        return new AccountDTO(null,
                 "Alison", "Marlow",
                 "1 Ross Avenue", "Levenshulme", "Manchester", "Greater Manchester", "M192HW",
                 "01619487013", "alisonmarlow@gmail.com");

@@ -7,19 +7,19 @@ public final class DefaultAccountServiceAdapterShould extends AccountServiceAdap
     @Override
     protected AccountServiceAdapter getAccountServiceAdapter() {
         return new DefaultAccountServiceAdapter(super.accountRepository, super.accountFactory,
-                super.existingAccountDTOAssembler);
+                super.accountDTOAssembler);
     }
 
     @Override
     protected AccountServiceAdapter getAccountServiceAdapterWithNullFactory() {
         return new DefaultAccountServiceAdapter(super.accountRepository, null,
-                super.existingAccountDTOAssembler);
+                super.accountDTOAssembler);
     }
 
     @Override
     protected AccountServiceAdapter getAccountServiceAdapterWithNullRepository() {
         return new DefaultAccountServiceAdapter(null, super.accountFactory,
-                super.existingAccountDTOAssembler);
+                super.accountDTOAssembler);
     }
 
     @Override

@@ -19,7 +19,7 @@
 
     <bean id="AccountFactory" class="com.iainhemstock.lendlibrary.domain.model.accounts.AccountFactory" />
 
-    <bean id="ExistingAccountDTOAssembler" class="com.iainhemstock.lendlibrary.application.impls.assembler.ExistingAccountDTOAssembler" />
+    <bean id="ExistingAccountDTOAssembler" class="com.iainhemstock.lendlibrary.application.impls.assembler.AccountDTOAssembler" />
 
     <bean id="AccountServiceAdapter" class="com.iainhemstock.lendlibrary.application.impls.DefaultAccountServiceAdapter">
         <constructor-arg ref="AccountRepository" />
