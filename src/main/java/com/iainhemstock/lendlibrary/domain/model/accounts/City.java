@@ -16,4 +16,17 @@ public final class City {
     public String toString() {
         return this.city;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        City city1 = (City) o;
+        return Objects.equals(city, city1.city);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(city);
+    }
 }

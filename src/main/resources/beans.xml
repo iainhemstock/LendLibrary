@@ -5,16 +5,26 @@
        xsi:schemaLocation = "http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="BookInMemoryRepository" class="com.iainhemstock.lendlibrary.infrastructure.persistence.BookInMemoryRepository" />
+    <bean id="CatalogueRepository" class="com.iainhemstock.lendlibrary.infrastructure.persistence.CatalogueRepositoryMemory" />
 
-    <bean id="SimpleCatalogueService" class="com.iainhemstock.lendlibrary.application.SimpleCatalogueService">
-        <constructor-arg ref="BookInMemoryRepository" />
+    <bean id="CatalogueService" class="com.iainhemstock.lendlibrary.application.impls.DefaultCatalogueService">
+        <constructor-arg ref="CatalogueRepository" />
     </bean>
 
-    <bean id="AccountInMemoryRepository" class="com.iainhemstock.lendlibrary.infrastructure.persistence.AccountInMemoryRepository" />
+    <bean id="AccountRepository" class="com.iainhemstock.lendlibrary.infrastructure.persistence.AccountRepositoryMemory" />
 
-    <bean id="SimpleAccountService" class="com.iainhemstock.lendlibrary.application.SimpleAccountService">
-        <constructor-arg ref="AccountInMemoryRepository" />
+    <bean id="AccountService" class="com.iainhemstock.lendlibrary.application.impls.DefaultAccountService">
+        <constructor-arg ref="AccountRepository" />
+    </bean>
+
+    <bean id="AccountFactory" class="com.iainhemstock.lendlibrary.domain.model.accounts.AccountFactory" />
+
+    <bean id="ExistingAccountDTOAssembler" class="com.iainhemstock.lendlibrary.application.impls.assembler.ExistingAccountDTOAssembler" />
+
+    <bean id="AccountServiceAdapter" class="com.iainhemstock.lendlibrary.application.impls.DefaultAccountServiceAdapter">
+        <constructor-arg ref="AccountRepository" />
+        <constructor-arg ref="AccountFactory" />
+        <constructor-arg ref="ExistingAccountDTOAssembler" />
     </bean>
 
 </beans>

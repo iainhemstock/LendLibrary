@@ -20,6 +20,20 @@ public final class ContactDetails {
         return this.email;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ContactDetails that = (ContactDetails) o;
+        return Objects.equals(telephone, that.telephone) &&
+                Objects.equals(email, that.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(telephone, email);
+    }
+
     public static class Builder {
 
         private Telephone telephone;

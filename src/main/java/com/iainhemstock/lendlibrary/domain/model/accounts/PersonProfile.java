@@ -13,6 +13,12 @@ public final class PersonProfile {
         this.contactDetails = builder.contactDetails;
     }
 
+    public PersonProfile(final PersonProfile copy) {
+        this.fullName = copy.fullName;
+        this.address = copy.address;
+        this.contactDetails = copy.contactDetails;
+    }
+
     public FullName getFullName() {
         return this.fullName;
     }

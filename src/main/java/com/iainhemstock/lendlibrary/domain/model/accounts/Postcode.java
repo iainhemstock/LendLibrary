@@ -16,4 +16,17 @@ public final class Postcode {
     public String toString() {
         return this.postcode;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Postcode postcode1 = (Postcode) o;
+        return Objects.equals(postcode, postcode1.postcode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(postcode);
+    }
 }

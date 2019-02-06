@@ -1,11 +1,12 @@
 package com.iainhemstock.lendlibrary.domain.model.accounts;
 
-import java.util.List;
+import com.iainhemstock.lendlibrary.infrastructure.persistence.Repository;
 
-public interface AccountRepository {
-    AccountId nextId();
-    void add(Account account);
-    Account getById(AccountId accountId);
-    List<Account> getAll();
-    boolean contains(final Account account);
+public abstract class AccountRepository extends Repository<Account, AccountId> {
+
+    @Override
+    public AccountId nextId() {
+        return new AccountId(super.generateUniqueId());
+    }
+
 }

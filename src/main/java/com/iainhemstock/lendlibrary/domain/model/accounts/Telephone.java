@@ -16,4 +16,17 @@ public final class Telephone {
     public String toString() {
         return this.telephone;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Telephone telephone1 = (Telephone) o;
+        return Objects.equals(telephone, telephone1.telephone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(telephone);
+    }
 }

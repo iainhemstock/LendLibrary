@@ -1,8 +1,5 @@
 package com.iainhemstock.lendlibrary.domain.model.accounts;
 
-import com.iainhemstock.lendlibrary.domain.model.accounts.Account;
-import com.iainhemstock.lendlibrary.domain.model.accounts.PersonProfile;
-import com.iainhemstock.lendlibrary.domain.model.accounts.AccountId;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -17,6 +14,6 @@ public final class AccountShould {
         AccountId accountId = Mockito.mock(AccountId.class);
         PersonProfile personProfile = Mockito.mock(PersonProfile.class);
         Account account = new Account(accountId, personProfile);
-        assertThat(account.getAccountId(), is(equalTo(accountId)));
+        assertThat(account.getId(), is(equalTo(accountId)));
     }
 }

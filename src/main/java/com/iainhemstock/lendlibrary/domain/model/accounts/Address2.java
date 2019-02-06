@@ -15,4 +15,17 @@ public final class Address2 {
     public String toString() {
         return this.address2;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address2 address21 = (Address2) o;
+        return Objects.equals(address2, address21.address2);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(address2);
+    }
 }

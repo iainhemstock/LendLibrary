@@ -38,6 +38,23 @@ public final class Address {
         return this.postcode;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(address1, address.address1) &&
+                Objects.equals(address2, address.address2) &&
+                Objects.equals(city, address.city) &&
+                Objects.equals(county, address.county) &&
+                Objects.equals(postcode, address.postcode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(address1, address2, city, county, postcode);
+    }
+
     public static class Builder {
 
         private static final String NULL_ARGUMENT_MESSAGE = "argument was null";
