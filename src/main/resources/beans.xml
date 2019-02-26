@@ -5,26 +5,36 @@
        xsi:schemaLocation = "http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="CatalogueRepository" class="com.iainhemstock.lendlibrary.infrastructure.persistence.CatalogueRepositoryMemory" />
+    <bean id="BookRepository"
+          class="com.iainhemstock.lendlibrary.infrastructure.persistence.memory.BookRepositoryMemory" />
 
-    <bean id="CatalogueService" class="com.iainhemstock.lendlibrary.application.impls.DefaultCatalogueService">
-        <constructor-arg ref="CatalogueRepository" />
+    <bean id="BookFactory"
+          class="com.iainhemstock.lendlibrary.domain.model.book.BookFactory" />
+
+    <bean id="BookDTOAssembler"
+          class="com.iainhemstock.lendlibrary.application.cataloging.impls.assembler.BookDTOAssembler" />
+
+    <bean id="CatalogingServiceAdapter"
+          class="com.iainhemstock.lendlibrary.application.cataloging.impls.CatalogingServiceImpl">
+        <constructor-arg ref="BookRepository" />
+        <constructor-arg ref="BookFactory" />
+        <constructor-arg ref="BookDTOAssembler" />
     </bean>
 
-    <bean id="AccountRepository" class="com.iainhemstock.lendlibrary.infrastructure.persistence.AccountRepositoryMemory" />
+    <bean id="MemberRepository"
+          class="com.iainhemstock.lendlibrary.infrastructure.persistence.memory.MemberRepositoryMemory" />
 
-    <bean id="AccountService" class="com.iainhemstock.lendlibrary.application.impls.DefaultAccountService">
-        <constructor-arg ref="AccountRepository" />
-    </bean>
+    <bean id="MemberFactory"
+          class="com.iainhemstock.lendlibrary.domain.model.member.MemberFactory" />
 
-    <bean id="AccountFactory" class="com.iainhemstock.lendlibrary.domain.model.accounts.AccountFactory" />
+    <bean id="MemberDTOAssembler"
+          class="com.iainhemstock.lendlibrary.application.registering.impls.assembler.MemberDTOAssembler" />
 
-    <bean id="ExistingAccountDTOAssembler" class="com.iainhemstock.lendlibrary.application.impls.assembler.AccountDTOAssembler" />
-
-    <bean id="AccountServiceAdapter" class="com.iainhemstock.lendlibrary.application.impls.DefaultAccountServiceAdapter">
-        <constructor-arg ref="AccountRepository" />
-        <constructor-arg ref="AccountFactory" />
-        <constructor-arg ref="ExistingAccountDTOAssembler" />
+    <bean id="RegistrationServiceAdapter"
+          class="com.iainhemstock.lendlibrary.application.registering.impls.RegisteringServiceImpl">
+        <constructor-arg ref="MemberRepository" />
+        <constructor-arg ref="MemberFactory" />
+        <constructor-arg ref="MemberDTOAssembler" />
     </bean>
 
 </beans>
