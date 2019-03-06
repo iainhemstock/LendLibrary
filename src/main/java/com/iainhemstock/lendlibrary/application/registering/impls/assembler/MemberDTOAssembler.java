@@ -1,35 +1,35 @@
 package com.iainhemstock.lendlibrary.application.registering.impls.assembler;
 
-import com.iainhemstock.lendlibrary.application.registering.dto.MembershipDTO;
-import com.iainhemstock.lendlibrary.domain.model.member.Membership;
+import com.iainhemstock.lendlibrary.application.registering.dto.MemberDTO;
+import com.iainhemstock.lendlibrary.domain.model.member.Member;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MembershipDTOAssembler {
+public class MemberDTOAssembler {
 
-    public List<MembershipDTO> toDTOList(List<Membership> memberships) {
-        List<MembershipDTO> dtos = new ArrayList<>();
+    public List<MemberDTO> toDTOList(List<Member> members) {
+        List<MemberDTO> dtos = new ArrayList<>();
 
-        for (Membership membership : memberships) {
+        for (Member member : members) {
 
-            final MembershipDTO dto = new MembershipDTO(
-                    membership.getId().toString(),
-                    membership.getFullName().getFirstName().toString(),
-                    membership.getFullName().getLastName().toString(),
-                    membership.getAddress().getAddressLine1().toString(),
-                    membership.getAddress().getAddressLine2().toString(),
-                    membership.getAddress().getCity().toString(),
-                    membership.getAddress().getCounty().toString(),
-                    membership.getAddress().getPostcode().toString(),
-                    membership.getContactDetails().getTelephone().toString(),
-                    membership.getContactDetails().getEmail().toString());
+            final MemberDTO dto = new MemberDTO(
+                    member.getId().toString(),
+                    member.getFullName().getFirstName().toString(),
+                    member.getFullName().getLastName().toString(),
+                    member.getAddress().getAddressLine1().toString(),
+                    member.getAddress().getAddressLine2().toString(),
+                    member.getAddress().getCity().toString(),
+                    member.getAddress().getCounty().toString(),
+                    member.getAddress().getPostcode().toString(),
+                    member.getContactDetails().getTelephone().toString(),
+                    member.getContactDetails().getEmail().toString());
             dtos.add(dto);
         }
         return dtos;
     }
 
-    public MembershipDTO toDTO(Membership membership) {
-        return toDTOList(List.of(membership)).get(0);
+    public MemberDTO toDTO(final Member member) {
+        return toDTOList(List.of(member)).get(0);
     }
 }

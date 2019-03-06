@@ -8,7 +8,7 @@ import com.iainhemstock.lendlibrary.domain.shared.Id;
 import java.util.Date;
 import java.util.Objects;
 
-public final class Reservation implements Entity {
+public class Reservation implements Entity {
     private final ReservationId reservationId;
     private final BookId bookId;
     private final MemberId memberId;

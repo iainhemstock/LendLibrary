@@ -1,121 +1,171 @@
-package com.iainhemstock.lendlibrary.application;
+package com.iainhemstock.lendlibrary.application.cataloging;
 
-import com.iainhemstock.lendlibrary.application.cataloging.CatalogingService;
-import com.iainhemstock.lendlibrary.domain.model.book.Book;
-import com.iainhemstock.lendlibrary.domain.model.book.BookId;
-import com.iainhemstock.lendlibrary.domain.model.book.BookRepository;
-import com.iainhemstock.lendlibrary.domain.shared.RepositoryException;
-import org.junit.Rule;
+import com.iainhemstock.lendlibrary.application.cataloging.dto.BookDTO;
+import com.iainhemstock.lendlibrary.application.cataloging.dto.DomainDrivenDesignBookDTO;
+import com.iainhemstock.lendlibrary.application.cataloging.dto.HeadFirstDesignPatternsBookDTO;
+import com.iainhemstock.lendlibrary.application.cataloging.impls.CatalogingServiceImpl;
+import com.iainhemstock.lendlibrary.application.cataloging.impls.assembler.BookDTOAssembler;
+import com.iainhemstock.lendlibrary.application.domain.model.book.DomainDrivenDesignBook;
+import com.iainhemstock.lendlibrary.application.domain.model.book.HeadFirstDesignPatternsBook;
+import com.iainhemstock.lendlibrary.domain.model.book.*;
+import com.iainhemstock.lendlibrary.domain.shared.Id;
+import com.iainhemstock.lendlibrary.infrastructure.persistence.memory.BookRepositoryMemory;
+import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 
+import java.util.Collections;
 import java.util.List;
 
+import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-public abstract class CatalogingServiceShould {
-
-    @Rule public MockitoRule rule = MockitoJUnit.rule();
-    @Mock private BookRepository bookRepository;
-
-    protected abstract CatalogingService getCatalogueService(final BookRepository bookRepository);
+public class CatalogingServiceShould {
 
     @Test
     public void throw_if_books_service_is_initialized_with_null_book_repository() {
         try {
-            getCatalogueService(null);
+            new CatalogingServiceImpl(
+                    null, new BookFactory(), new BookDTOAssembler());
             fail("expected method under test to throw NullPointerException but it didn't");
         }
         catch (NullPointerException ex) {
-            assertThat(ex.getMessage(), is(equalTo("Catalogue repository is required")));
+            assertThat(ex.getMessage(), is(equalTo("Book repository is required")));
         }
     }
 
     @Test
-    public void throw_when_attempting_to_save_null_book_profile() {
+    public void throw_if_books_service_is_initialized_with_null_book_factory() {
         try {
-            getCatalogueService(bookRepository).addBook(null);
+            new CatalogingServiceImpl(
+                    mock(BookRepository.class), null, new BookDTOAssembler());
             fail("expected method under test to throw NullPointerException but it didn't");
         }
         catch (NullPointerException ex) {
-            assertThat(ex.getMessage(), is(equalTo("Book profile is required")));
+            assertThat(ex.getMessage(), is(equalTo("Book factory is required")));
         }
     }
 
     @Test
-    public void delegate_to_repo_to_save_book_profile() {
-        Book book = Mockito.mock(Book.class);
-        getCatalogueService(bookRepository).addBook(book);
-        verify(bookRepository).add(book);
-    }
-
-    @Test
-    public void rethrow_same_exception_if_repository_throws() {
-        RepositoryException mockRepositoryException = Mockito.mock(RepositoryException.class);
-        Book book = Mockito.mock(Book.class);
-        Mockito.doThrow(mockRepositoryException).when(bookRepository).add(book);
-
+    public void throw_if_books_service_is_initialized_with_null_book_dto_assembler() {
         try {
-            getCatalogueService(bookRepository).addBook(book);
-            fail("expected method under test to throw RepositoryException but it didn't");
-        }
-        catch (RepositoryException caughtException) {
-            assertThat(caughtException, is(equalTo(mockRepositoryException)));
-        }
-    }
-
-    @Test
-    public void return_all_book_profiles_in_repo() {
-        final Book firstBook = Mockito.mock(Book.class);
-        final Book secondBook = Mockito.mock(Book.class);
-        final Book thirdBook = Mockito.mock(Book.class);
-        when(bookRepository.getAll()).thenReturn(List.of(firstBook, secondBook, thirdBook));
-        assertThat(
-                getCatalogueService(bookRepository).getAllBooks(),
-                is(equalTo(List.of(firstBook, secondBook, thirdBook))));
-    }
-
-    @Test
-    public void throw_when_trying_to_find_book_with_null_book_id() {
-        try {
-            getCatalogueService(bookRepository).getBook(null);
+            new CatalogingServiceImpl(
+                    mock(BookRepository.class), new BookFactory(), null);
             fail("expected method under test to throw NullPointerException but it didn't");
         }
         catch (NullPointerException ex) {
-            assertThat(ex.getMessage(), is(equalTo("Book id is required")));
+            assertThat(ex.getMessage(), is(equalTo("Book DTO assembler is required")));
         }
     }
 
     @Test
-    public void return_book_profile_found_by_id() {
-        Book book = Mockito.mock(Book.class);
-        BookId id = Mockito.mock(BookId.class);
-        when(bookRepository.getById(id)).thenReturn(book);
-        assertThat(getCatalogueService(bookRepository).getBook(id), is(equalTo(book)));
+    public void throw_when_attempting_to_save_null_book() {
+        try {
+            new CatalogingServiceImpl(
+                    mock(BookRepository.class), new BookFactory(), new BookDTOAssembler())
+                        .addBookToCatalog(null);
+            fail("expected method under test to throw NullPointerException but it didn't");
+        }
+        catch (NullPointerException ex) {
+            assertThat(ex.getMessage(), is(equalTo("Book DTO is required")));
+        }
     }
 
     @Test
-    public void rethrow_repo_exception_when_book_cannot_be_found() {
-        BookId nonExistentBookId = Mockito.mock(BookId.class);
-        RepositoryException repositoryException = Mockito.mock(RepositoryException.class);
+    public void save_book_in_repo_and_return_book_id() {
+        BookId bookId = new BookId("id-1234");
+        BookRepository bookRepository = mock(BookRepository.class);
+        when(bookRepository.nextId()).thenReturn(bookId);
 
-        when(repositoryException.getMessage()).thenReturn("Book does not exist");
-        Mockito.doThrow(repositoryException).when(bookRepository).getById(nonExistentBookId);
+        CatalogingService catalogingService = new CatalogingServiceImpl(
+                bookRepository, new BookFactory(), new BookDTOAssembler());
+
+        String addedBookId = catalogingService.addBookToCatalog(
+                new HeadFirstDesignPatternsBookDTO(null));
+
+        assertThat(addedBookId,
+                is(equalTo(bookId.toString())));
+
+        verify(bookRepository)
+                .add(new HeadFirstDesignPatternsBook(bookId.toString()));
+    }
+
+    @Test
+    public void throw_when_trying_to_fetch_book_with_null_id() {
+        try {
+            new CatalogingServiceImpl(
+                    mock(BookRepository.class), new BookFactory(), new BookDTOAssembler())
+                        .fetchBook(null);
+            fail("expected method under test to throw NullPointerException but it didn't");
+        }
+        catch (NullPointerException ex) {
+            assertThat(ex.getMessage(), is(Matchers.equalTo("Book id is required")));
+        }
+    }
+
+    @Test
+    public void throw_when_trying_to_fetch_book_that_does_not_exist() {
+        String absentBookId = "id-2345";
+
+        BookRepository bookRepository = mock(BookRepository.class);
+        doThrow(new BookNotFoundException("Book with id <" + absentBookId + "> not found"))
+                .when(bookRepository).getById(any(BookId.class));
 
         try {
-            getCatalogueService(bookRepository).getBook(nonExistentBookId);
-            fail("expected method under test to throw RepositoryException but it didn't");
+            new CatalogingServiceImpl(bookRepository, new BookFactory(), new BookDTOAssembler())
+                    .fetchBook(absentBookId);
+            fail("expected method under test to throw BookNotFoundException but it didn't");
+        } catch (BookNotFoundException ex) {
+            assertThat(ex.getMessage(),
+                    is(equalTo("Book with id <" + absentBookId + "> not found")));
         }
-        catch (RepositoryException ex) {
-            assertThat(ex.getMessage(), is(equalTo("Book does not exist")));
-        }
+    }
+
+    @Test
+    public void return_details_of_given_book() {
+        BookId bookId = new BookId("id-1234");
+
+        BookRepository bookRepository = mock(BookRepository.class);
+        when(bookRepository.getById(bookId))
+                .thenReturn(new HeadFirstDesignPatternsBook(bookId.toString()));
+
+        BookDTO fetchedBookDTO =
+                new CatalogingServiceImpl(bookRepository, new BookFactory(), new BookDTOAssembler())
+                        .fetchBook(bookId.toString());
+
+        assertThat(fetchedBookDTO,
+                is(equalTo(new HeadFirstDesignPatternsBookDTO(bookId.toString()))));
+    }
+
+    @Test
+    public void return_empty_list_when_trying_to_fetch_books_that_dont_exist() {
+        CatalogingService catalogingService = new CatalogingServiceImpl(
+                mock(BookRepository.class), new BookFactory(), new BookDTOAssembler());
+        assertThat(catalogingService.fetchAllBooks(), is(equalTo(Collections.EMPTY_LIST)));
+    }
+
+    @Test
+    public void return_details_of_all_books() {
+        String firstBookId = "id-1234";
+        String secondBookId = "id-5678";
+
+        BookRepository bookRepository = mock(BookRepository.class);
+        when(bookRepository.getAll()).thenReturn(List.of(
+                new DomainDrivenDesignBook(firstBookId),
+                new HeadFirstDesignPatternsBook(secondBookId)));
+
+        List<BookDTO> allFetchedBookDTOS =
+                new CatalogingServiceImpl(bookRepository, new BookFactory(), new BookDTOAssembler())
+                        .fetchAllBooks();
+
+        assertThat(allFetchedBookDTOS.get(0),
+                is(equalTo(new DomainDrivenDesignBookDTO(firstBookId))));
+
+        assertThat(allFetchedBookDTOS.get(1),
+                is(equalTo(new HeadFirstDesignPatternsBookDTO(secondBookId))));
     }
 }

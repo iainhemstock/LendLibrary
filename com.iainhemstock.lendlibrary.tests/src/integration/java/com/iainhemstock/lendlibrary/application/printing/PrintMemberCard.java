@@ -8,8 +8,7 @@ import com.iainhemstock.lendlibrary.application.registering.impls.RegisteringSer
 import com.iainhemstock.lendlibrary.application.registering.impls.assembler.MemberDTOAssembler;
 import com.iainhemstock.lendlibrary.domain.model.member.*;
 import com.iainhemstock.lendlibrary.domain.model.membercard.MemberCard;
-import com.iainhemstock.lendlibrary.domain.model.membercard.MemberCardPrinter;
-import com.iainhemstock.lendlibrary.domain.shared.Id;
+import com.iainhemstock.lendlibrary.domain.service.MemberCardPrinter;
 import com.iainhemstock.lendlibrary.infrastructure.persistence.memory.MemberRepositoryMemory;
 import org.junit.Before;
 import org.junit.Test;

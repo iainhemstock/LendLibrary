@@ -1,8 +1,16 @@
 package com.iainhemstock.lendlibrary.application.registering;
 
+import com.iainhemstock.lendlibrary.application.domain.model.member.AlisonMarlowMember;
+import com.iainhemstock.lendlibrary.application.domain.model.member.ColinHartMember;
+import com.iainhemstock.lendlibrary.application.registering.dto.AlisonMarlowMemberDTO;
+import com.iainhemstock.lendlibrary.application.registering.dto.ColinHartMemberDTO;
+import com.iainhemstock.lendlibrary.application.registering.dto.ColinHartRelocatedMemberDTO;
 import com.iainhemstock.lendlibrary.application.registering.dto.MemberDTO;
+import com.iainhemstock.lendlibrary.application.registering.impls.RegisteringServiceImpl;
 import com.iainhemstock.lendlibrary.application.registering.impls.assembler.MemberDTOAssembler;
 import com.iainhemstock.lendlibrary.domain.model.member.*;
+import com.iainhemstock.lendlibrary.domain.shared.Id;
+import com.iainhemstock.lendlibrary.infrastructure.persistence.memory.MemberRepositoryMemory;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -20,33 +28,12 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public abstract class RegisteringServiceAdapterShould {
-
-    @Rule public MockitoRule rule = MockitoJUnit.rule();
-    @Mock protected MemberFactory memberFactory;
-    @Mock protected MemberRepository memberRepository;
-    @Mock protected MemberDTOAssembler memberDTOAssembler;
-
-    protected abstract RegisteringServiceAdapter getMembershipServiceAdapter();
-    protected abstract RegisteringServiceAdapter getMembershipServiceAdapterWithNullFactory();
-    protected abstract RegisteringServiceAdapter getMembershipServiceAdapterWithNullRepository();
-    protected abstract RegisteringServiceAdapter getMembershipServiceAdapterWithNullAssembler();
+public final class RegisteringServiceShould {
 
     @Test
-    public void throw_if_adapter_is_initialized_with_null_factory() {
+    public void throw_if_service_is_initialized_with_null_repository() {
         try {
-            getMembershipServiceAdapterWithNullFactory();
-            fail("expected method under test to throw NullPointerException but it didn't");
-        }
-        catch (NullPointerException ex) {
-            assertThat(ex.getMessage(), is(equalTo("Member factory is required")));
-        }
-    }
-
-    @Test
-    public void throw_if_adapter_is_initialized_with_null_repository() {
-        try {
-            getMembershipServiceAdapterWithNullRepository();
+            new RegisteringServiceImpl(null, new MemberFactory(), new MemberDTOAssembler());
             fail("expected method under test to throw NullPointerException but it didn't");
         }
         catch (NullPointerException ex) {
@@ -55,9 +42,20 @@ public abstract class RegisteringServiceAdapterShould {
     }
 
     @Test
-    public void throw_if_adapter_is_initialized_with_null_assembler() {
+    public void throw_if_service_is_initialized_with_null_factory() {
         try {
-            getMembershipServiceAdapterWithNullAssembler();
+            new RegisteringServiceImpl(mock(MemberRepository.class), null, new MemberDTOAssembler());
+            fail("expected method under test to throw NullPointerException but it didn't");
+        }
+        catch (NullPointerException ex) {
+            assertThat(ex.getMessage(), is(equalTo("Member factory is required")));
+        }
+    }
+
+    @Test
+    public void throw_if_service_is_initialized_with_null_assembler() {
+        try {
+            new RegisteringServiceImpl(mock(MemberRepository.class), new MemberFactory(), null);
             fail("expected method under test to throw NullPointerException but it didn't");
         }
         catch (NullPointerException ex) {
@@ -66,30 +64,31 @@ public abstract class RegisteringServiceAdapterShould {
     }
 
     @Test
-    public void save_membership_in_repo_and_return_membership_id_when_opening_new_membership() {
-        MemberId memberId = Mockito.mock(MemberId.class);
-        Member member = Mockito.mock(Member.class);
+    public void save_member_in_repo_and_return_member_id_when_registering_new_member() {
+        MemberId memberId = new MemberId("id-1234");
 
-        when(memberRepository.nextId()).thenReturn(memberId);
-        when(memberId.toString()).thenReturn("id-1234");
-        when(memberFactory.create(
-                "id-1234",
-                getAlisonMarlowMembershipDTO().getFirstName(), getAlisonMarlowMembershipDTO().getLastName(),
-                getAlisonMarlowMembershipDTO().getAddressLine1(), getAlisonMarlowMembershipDTO().getAddressLine2(),
-                getAlisonMarlowMembershipDTO().getCity(), getAlisonMarlowMembershipDTO().getCounty(),
-                getAlisonMarlowMembershipDTO().getPostcode(),
-                getAlisonMarlowMembershipDTO().getContactNumber(), getAlisonMarlowMembershipDTO().getEmail()))
-                .thenReturn(member);
+        MemberRepository memberRepository = mock(MemberRepository.class);
+        when(memberRepository.nextId())
+                .thenReturn(memberId);
 
-        String actualMembershipId = getMembershipServiceAdapter().openMembership(getAlisonMarlowMembershipDTO());
-        assertThat(actualMembershipId, is(equalTo("id-1234")));
-        verify(memberRepository).add(member);
+        RegisteringService registeringService = new RegisteringServiceImpl(
+                memberRepository, new MemberFactory(), new MemberDTOAssembler());
+
+        String actualMembershipId = registeringService.registerNewMember(
+                new ColinHartMemberDTO(memberId.toString()));
+
+        assertThat(actualMembershipId,
+                is(equalTo(memberId.toString())));
+
+        verify(memberRepository)
+                .add(new ColinHartMember(memberId.toString()));
     }
 
     @Test
-    public void throw_when_trying_to_fetch_membership_with_null_id() {
+    public void throw_when_trying_to_fetch_member_with_null_id() {
         try {
-            getMembershipServiceAdapter().fetchMembership(null);
+            new RegisteringServiceImpl(mock(MemberRepository.class), new MemberFactory(), new MemberDTOAssembler())
+                    .fetchMember(null);
             fail("expected method under test to throw NullPointerException but it didn't");
         }
         catch (NullPointerException ex) {
@@ -98,91 +97,114 @@ public abstract class RegisteringServiceAdapterShould {
     }
 
     @Test
-    public void throw_when_trying_to_fetch_membership_that_does_not_exist() {
-        doThrow(new MemberNotFoundException("Member with id <id-2345> not found"))
-                .when(memberRepository).getById(any(MemberId.class));
+    public void throw_when_trying_to_fetch_member_that_does_not_exist() {
+        MemberId absentMemberId = new MemberId("id-2345");
+        String exceptionMsg = "Member with id <" + absentMemberId + "> not found";
 
-        String absentMembershipId = "id-2345";
+        MemberRepository memberRepository = mock(MemberRepository.class);
+        doThrow(new MemberNotFoundException(exceptionMsg))
+                .when(memberRepository).getById(new MemberId(absentMemberId.toString()));
+
         try {
-            getMembershipServiceAdapter().fetchMembership(absentMembershipId);
+            new RegisteringServiceImpl(memberRepository, new MemberFactory(), new MemberDTOAssembler())
+                    .fetchMember(absentMemberId.toString());
             fail("expected method under test to throw MemberNotFoundException but it didn't");
         } catch (MemberNotFoundException ex) {
-            assertThat(ex.getMessage(), is(equalTo("Member with id <id-2345> not found")));
+            assertThat(ex.getMessage(), is(equalTo(exceptionMsg)));
         }
     }
 
     @Test
-    public void return_details_of_given_membership() {
-        MemberId memberId = Mockito.mock(MemberId.class);
-        Member member = Mockito.mock(Member.class);
+    public void return_details_of_given_member() {
+        MemberId memberId = new MemberId("id-1234");
 
-        when(memberRepository.nextId()).thenReturn(memberId);
-        when(memberRepository.getById(any(MemberId.class))).thenReturn(member);
-        when(memberId.toString()).thenReturn("id-1234");
-        when(memberDTOAssembler.toDTO(member)).thenReturn(getAlisonMarlowMembershipDTO("id-1234"));
+        MemberRepository memberRepository = mock(MemberRepository.class);
+        when(memberRepository.getById(memberId))
+                .thenReturn(new ColinHartMember(memberId.toString()));
 
-        MemberDTO alisonMarlowMemberDTO = getAlisonMarlowMembershipDTO();
-        String membershipIdStr = getMembershipServiceAdapter().openMembership(alisonMarlowMemberDTO);
+        MemberDTO fetchedMemberDTO =
+                new RegisteringServiceImpl(memberRepository, new MemberFactory(), new MemberDTOAssembler())
+                        .fetchMember(memberId.toString());
 
-        MemberDTO memberDTO = getMembershipServiceAdapter().fetchMembership(membershipIdStr);
-
-        assertThat(memberDTO.getMembershipId(), is(equalTo(membershipIdStr)));
-        assertThat(memberDTO.getFirstName(), is(equalTo(alisonMarlowMemberDTO.getFirstName())));
-        assertThat(memberDTO.getLastName(), is(equalTo(alisonMarlowMemberDTO.getLastName())));
-        assertThat(memberDTO.getAddressLine1(), is(equalTo(alisonMarlowMemberDTO.getAddressLine1())));
-        assertThat(memberDTO.getAddressLine2(), is(equalTo(alisonMarlowMemberDTO.getAddressLine2())));
-        assertThat(memberDTO.getCity(), is(equalTo(alisonMarlowMemberDTO.getCity())));
-        assertThat(memberDTO.getCounty(), is(equalTo(alisonMarlowMemberDTO.getCounty())));
-        assertThat(memberDTO.getPostcode(), is(equalTo(alisonMarlowMemberDTO.getPostcode())));
-        assertThat(memberDTO.getContactNumber(), is(equalTo(alisonMarlowMemberDTO.getContactNumber())));
-        assertThat(memberDTO.getEmail(), is(equalTo(alisonMarlowMemberDTO.getEmail())));
+        assertThat(fetchedMemberDTO,
+                is(equalTo(new ColinHartMemberDTO(memberId.toString()))));
     }
 
     @Test
-    public void return_empty_list_when_trying_to_fetch_memberships_that_dont_exist() {
-        assertThat(getMembershipServiceAdapter().fetchAllMemberships(), is(equalTo(Collections.EMPTY_LIST)));
+    public void return_empty_list_when_trying_to_fetch_members_that_dont_exist() {
+        RegisteringServiceImpl registeringService =
+                new RegisteringServiceImpl(mock(MemberRepository.class), new MemberFactory(), new MemberDTOAssembler());
+        assertThat(registeringService.fetchAllMembers(),
+                is(equalTo(Collections.EMPTY_LIST)));
     }
 
     @Test
-    public void return_details_of_all_memberships() {
-        MemberDTO alisonMarlowMemberDTO = getAlisonMarlowMembershipDTO("id-1234");
-        MemberDTO colinHartMemberDTO = getColinHartExistingAccountDTO("id-5678");
+    public void return_details_of_all_members() {
+        String firstMemberId = "id-1234";
+        String secondMemberId = "id-5678";
 
-        List<Member> membershipsList = List.of(Mockito.mock(Member.class), Mockito.mock(Member.class));
-        when(memberRepository.getAll()).thenReturn(membershipsList);
-        when(memberDTOAssembler.toDTOList(membershipsList))
-                .thenReturn(List.of(alisonMarlowMemberDTO, colinHartMemberDTO));
+        MemberRepository memberRepository = mock(MemberRepository.class);
+        when(memberRepository.getAll())
+                .thenReturn(List.of(
+                        new AlisonMarlowMember(firstMemberId),
+                        new ColinHartMember(secondMemberId)));
 
-        List<MemberDTO> allFetchedMemberDTOS = getMembershipServiceAdapter().fetchAllMemberships();
+        List<MemberDTO> allFetchedMemberDTOS =
+                new RegisteringServiceImpl(memberRepository, new MemberFactory(), new MemberDTOAssembler())
+                        .fetchAllMembers();
 
-        verify(memberRepository).getAll();
-        verify(memberDTOAssembler).toDTOList(membershipsList);
-        assertThat(allFetchedMemberDTOS.get(0), is(equalTo(alisonMarlowMemberDTO)));
-        assertThat(allFetchedMemberDTOS.get(1), is(equalTo(colinHartMemberDTO)));
+        assertThat(allFetchedMemberDTOS.get(0),
+                is(equalTo(new AlisonMarlowMemberDTO(firstMemberId))));
+
+        assertThat(allFetchedMemberDTOS.get(1),
+                is(equalTo(new ColinHartMemberDTO(secondMemberId))));
     }
 
-    private MemberDTO getAlisonMarlowMembershipDTO() {
-        return new MemberDTO(null,
-                "Alison", "Marlow",
-                "1 Ross Avenue", "Levenshulme", "Manchester", "Greater Manchester", "M192HW",
-                "01619487013", "alisonmarlow@gmail.com");
+    @Test
+    public void throw_when_attempting_to_update_member_that_does_not_exist() {
+        MemberId absentMemberId = new MemberId ("id-5678");
+        String exceptionMsg = "Member with id <" + absentMemberId.toString() + "> not found";
+
+        MemberRepository memberRepository = mock(MemberRepository.class);
+        doThrow(new MemberNotFoundException(exceptionMsg))
+                .when(memberRepository).getById(absentMemberId);
+
+        try {
+            new RegisteringServiceImpl(memberRepository, new MemberFactory(), new MemberDTOAssembler())
+                    .updateExistingMember(new AlisonMarlowMemberDTO(absentMemberId.toString()));
+            fail("expected method under test to throw MemberNotFoundException but it didn't");
+        } catch (MemberNotFoundException ex) {
+            assertThat(ex.getMessage(), is(equalTo(exceptionMsg)));
+        }
     }
 
-    private MemberDTO getAlisonMarlowMembershipDTO(final String membershipId) {
-        return new MemberDTO(
-                membershipId,
-                getAlisonMarlowMembershipDTO().getFirstName(), getAlisonMarlowMembershipDTO().getLastName(),
-                getAlisonMarlowMembershipDTO().getAddressLine1(), getAlisonMarlowMembershipDTO().getAddressLine2(),
-                getAlisonMarlowMembershipDTO().getCity(), getAlisonMarlowMembershipDTO().getCounty(),
-                getAlisonMarlowMembershipDTO().getPostcode(),
-                getAlisonMarlowMembershipDTO().getContactNumber(), getAlisonMarlowMembershipDTO().getEmail());
+    @Test
+    public void throw_when_attempting_to_update_member_with_null_details() {
+        try {
+            new RegisteringServiceImpl(mock(MemberRepository.class), new MemberFactory(), new MemberDTOAssembler())
+                    .updateExistingMember(null);
+            fail("expected member under test to throw but it didn't");
+        } catch (NullPointerException ex) {
+            assertThat(ex.getMessage(), is(equalTo("Member DTO is required")));
+        }
     }
 
-    private MemberDTO getColinHartExistingAccountDTO(String membershipId) {
-        return new MemberDTO(
-                membershipId,
-                "John", "Smith",
-                "456 The Avenue", "Great Parndon", "Harlow", "Essex", "CM194HG",
-                "01992967603", "jsmith@gmail.com");
+    @Test
+    public void update_details_of_existing_member() {
+        MemberId existingMemberId = new MemberId ("id-1234");
+        Member preUpdatedMember = new ColinHartMember(existingMemberId.toString());
+
+        MemberRepository memberRepository = mock(MemberRepository.class);
+        when(memberRepository.getById(existingMemberId))
+                .thenReturn(preUpdatedMember);
+
+        RegisteringServiceImpl registeringService =
+                new RegisteringServiceImpl(memberRepository, new MemberFactory(), new MemberDTOAssembler());
+
+        registeringService.updateExistingMember(new AlisonMarlowMemberDTO(existingMemberId.toString()));
+        MemberDTO postUpdatedMemberDTO = registeringService.fetchMember(existingMemberId.toString());
+
+        assertThat(postUpdatedMemberDTO,
+                is(equalTo(new AlisonMarlowMemberDTO(existingMemberId.toString()))));
     }
 }

@@ -1,5 +1,7 @@
-package com.iainhemstock.lendlibrary.domain.model.catalogue;
+package com.iainhemstock.lendlibrary.domain.model.book;
 
+import com.iainhemstock.lendlibrary.application.domain.model.book.HeadFirstDesignPatternsBook;
+import com.iainhemstock.lendlibrary.domain.shared.Id;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -11,9 +13,8 @@ public final class BookShould {
 
     @Test
     public void return_its_id() {
-        BookId bookId = Mockito.mock(BookId.class);
-        BookProfile bookProfile = Mockito.mock(BookProfile.class);
-        Book book = new Book(bookId, bookProfile);
+        BookId bookId = new BookId("id-1234");
+        Book book = new HeadFirstDesignPatternsBook(bookId.toString());
         assertThat(book.getId(), is(equalTo(bookId)));
     }
 }

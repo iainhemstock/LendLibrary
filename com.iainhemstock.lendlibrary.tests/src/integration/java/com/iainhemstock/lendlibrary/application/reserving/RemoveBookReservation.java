@@ -3,17 +3,12 @@ package com.iainhemstock.lendlibrary.application.reserving;
 import com.iainhemstock.lendlibrary.application.reserving.dto.ReservationDTO;
 import com.iainhemstock.lendlibrary.application.reserving.impls.ReservingServiceImpl;
 import com.iainhemstock.lendlibrary.application.reserving.impls.assembler.ReservationDTOAssembler;
-import com.iainhemstock.lendlibrary.domain.model.reservation.Reservation;
-import com.iainhemstock.lendlibrary.domain.model.reservation.ReservationId;
-import com.iainhemstock.lendlibrary.domain.service.impls.CalendarServiceImpl;
+import com.iainhemstock.lendlibrary.domain.service.impls.ClockImpl;
 import com.iainhemstock.lendlibrary.infrastructure.persistence.memory.ReservationRepositoryMemory;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -25,7 +20,7 @@ public final class RemoveBookReservation {
     @Before
     public void setUp() throws Exception {
         reservingService = new ReservingServiceImpl(
-                new ReservationRepositoryMemory(), new CalendarServiceImpl(), new ReservationDTOAssembler());
+                new ReservationRepositoryMemory(), new ClockImpl(), new ReservationDTOAssembler());
     }
 
     @Test

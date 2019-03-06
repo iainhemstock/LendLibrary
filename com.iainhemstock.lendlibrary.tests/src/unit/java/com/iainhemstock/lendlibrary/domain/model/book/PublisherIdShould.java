@@ -1,4 +1,4 @@
-package com.iainhemstock.lendlibrary.domain.model.catalogue;
+package com.iainhemstock.lendlibrary.domain.model.book;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;

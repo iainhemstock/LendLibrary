@@ -14,8 +14,7 @@ import com.iainhemstock.lendlibrary.application.reserving.impls.assembler.Reserv
 import com.iainhemstock.lendlibrary.domain.model.book.BookFactory;
 import com.iainhemstock.lendlibrary.domain.model.member.MemberFactory;
 import com.iainhemstock.lendlibrary.domain.model.reservation.ReservationId;
-import com.iainhemstock.lendlibrary.domain.service.impls.CalendarServiceImpl;
-import com.iainhemstock.lendlibrary.domain.shared.Id;
+import com.iainhemstock.lendlibrary.domain.service.impls.ClockImpl;
 import com.iainhemstock.lendlibrary.infrastructure.persistence.memory.BookRepositoryMemory;
 import com.iainhemstock.lendlibrary.infrastructure.persistence.memory.MemberRepositoryMemory;
 import com.iainhemstock.lendlibrary.infrastructure.persistence.memory.ReservationRepositoryMemory;
@@ -37,16 +36,16 @@ public final class AddBookReservation {
     private RegisteringService registrationService;
     private String bookId;
     private String memberId;
-    private TestableCalendarServiceImpl calendarService;
+    private TestableClockImpl clock;
     private ReservationDTOAssembler reservationDTOAssembler;
     private TestableReservationRepositoryMemory reservationRepository;
 
     @Before
     public void setUp() throws Exception {
-        calendarService = new TestableCalendarServiceImpl();
+        clock = new TestableClockImpl();
         reservationDTOAssembler = new ReservationDTOAssembler();
         reservationRepository = new TestableReservationRepositoryMemory();
-        reservingService = new ReservingServiceImpl(reservationRepository, calendarService, reservationDTOAssembler);
+        reservingService = new ReservingServiceImpl(reservationRepository, clock, reservationDTOAssembler);
         catalogingService = new CatalogingServiceImpl(
                 new BookRepositoryMemory(), new BookFactory(), new BookDTOAssembler());
         registrationService = new RegisteringServiceImpl(
@@ -76,7 +75,7 @@ public final class AddBookReservation {
     }
 
     private Date getReservationDate() {
-        return calendarService.getLastDate();
+        return clock.getLastDate();
     }
 
     private void addBookToCatalog() {
@@ -100,7 +99,7 @@ public final class AddBookReservation {
         }
     }
 
-    private class TestableCalendarServiceImpl extends CalendarServiceImpl {
+    private class TestableClockImpl extends ClockImpl {
         private Date today;
 
         @Override

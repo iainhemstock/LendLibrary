@@ -1,4 +1,4 @@
-package com.iainhemstock.lendlibrary.domain.model.registration;
+package com.iainhemstock.lendlibrary.domain.model.member;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -7,22 +7,14 @@ import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.mock;
 
 public class FullNameShould {
 
     @Test
-    public void build_a_full_name_using_builder() {
-        FirstName firstName = Mockito.mock(FirstName.class);
-        LastName lastName = Mockito.mock(LastName.class);
-        FullName fullName = new FullName.Builder().withFirstName(firstName).withLastName(lastName).build();
-        assertThat(fullName.getFirstName(), is(equalTo(firstName)));
-        assertThat(fullName.getLastName(), is(equalTo(lastName)));
-    }
-
-    @Test
     public void throw_if_passed_a_null_first_name() {
         try {
-            new FullName.Builder().withFirstName(null);
+            new FullName(null, new LastName("Hart"));
             fail("expected method under test to throw NullPointerException but it didn't");
         }
         catch (NullPointerException ex) {
@@ -33,7 +25,7 @@ public class FullNameShould {
     @Test
     public void throw_if_passed_a_null_last_name() {
         try {
-            new FullName.Builder().withLastName(null);
+            new FullName(new FirstName("Colin"), null);
             fail("expected method under test to throw NullPointerException but it didn't");
         }
         catch (NullPointerException ex) {

@@ -1,4 +1,4 @@
-package com.iainhemstock.lendlibrary.domain.model.registration;
+package com.iainhemstock.lendlibrary.domain.model.member;
 
 import org.junit.Test;
 

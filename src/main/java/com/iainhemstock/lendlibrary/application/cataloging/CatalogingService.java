@@ -1,16 +1,14 @@
 package com.iainhemstock.lendlibrary.application.cataloging;
 
 import com.iainhemstock.lendlibrary.application.cataloging.dto.BookDTO;
-import com.iainhemstock.lendlibrary.domain.model.book.Book;
-import com.iainhemstock.lendlibrary.domain.model.book.BookId;
 
 import java.util.List;
 
-public interface CatalogingServiceAdapter {
+public interface CatalogingService {
 
-    String addBook(final BookDTO bookDTO);
+    String addBookToCatalog(final BookDTO bookDTO);
 
-    List<BookDTO> getAllBooks();
+    BookDTO fetchBook(String bookId);
 
-    BookDTO getBook(String bookId);
+    List<BookDTO> fetchAllBooks();
 }

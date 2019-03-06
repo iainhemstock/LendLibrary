@@ -1,4 +1,4 @@
-package com.iainhemstock.lendlibrary.domain.model.registration;
+package com.iainhemstock.lendlibrary.domain.model.member;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -7,13 +7,14 @@ import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.mock;
 
 public final class ContactDetailsShould {
 
     @Test
-    public void throw_if_builder_receives_null_telephone() {
+    public void throw_when_initializing_with_null_telephone() {
         try {
-            new ContactDetails.Builder().withTelephone(null);
+            new ContactDetails(null, mock(Email.class));
             fail("expected method under test to throw NullpointerException but it didn't");
         }
         catch (NullPointerException ex) {
@@ -22,27 +23,13 @@ public final class ContactDetailsShould {
     }
 
     @Test
-    public void add_telephone_contact_details_using_builder() {
-        final Telephone telephone = Mockito.mock(Telephone.class);
-        final ContactDetails contactDetails = new ContactDetails.Builder().withTelephone(telephone).build();
-        assertThat(contactDetails.getTelephone(), is(equalTo(telephone)));
-    }
-
-    @Test
-    public void throw_if_builder_receives_null_email() {
+    public void throw_when_initializing_with_null_email() {
         try {
-            new ContactDetails.Builder().withEmail(null);
-            fail("expected method under test to thorw NullPointerException but it didn't");
+            new ContactDetails(mock(Telephone.class), null);
+            fail("expected method under test to throw NullPointerException but it didn't");
         }
         catch (NullPointerException ex) {
             assertThat(ex.getMessage(), is(equalTo("Email is required")));
         }
-    }
-
-    @Test
-    public void add_email_to_contact_details_using_builder() {
-        final Email email = Mockito.mock(Email.class);
-        final ContactDetails contactDetails = new ContactDetails.Builder().withEmail(email).build();
-        assertThat(contactDetails.getEmail(), is(equalTo(email)));
     }
 }

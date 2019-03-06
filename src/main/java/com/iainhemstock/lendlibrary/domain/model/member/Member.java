@@ -26,6 +26,13 @@ public class Member implements Entity {
         requireNonNull(this.contactDetails, "Contact details are required");
     }
 
+    public Member(Member copy) {
+        this.memberId = copy.memberId;
+        this.fullName = copy.fullName;
+        this.address = copy.address;
+        this.contactDetails = copy.contactDetails;
+    }
+
     @Override
     public MemberId getId() {
         return this.memberId;
@@ -68,8 +75,7 @@ public class Member implements Entity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null /*|| getClass() != o.getClass()*/)
-            return false;
+        if (o == null) return false;
         Member that = (Member) o;
         return Objects.equals(memberId, that.memberId) &&
                 Objects.equals(fullName, that.fullName) &&

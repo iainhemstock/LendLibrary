@@ -9,12 +9,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class EntityIdShould {
+public class IdShould {
 
     private String stringId = UUID.randomUUID().toString();
 
-    public EntityId getId(final String stringId) {
-        return new EntityId(stringId);
+    private Id getId(final String stringId) {
+        return new Id(stringId);
     }
 
     @Test

@@ -1,7 +1,7 @@
-package com.iainhemstock.lendlibrary.application;
+package com.iainhemstock.lendlibrary.domain.model.member;
 
-import com.iainhemstock.lendlibrary.domain.model.member.*;
-import com.iainhemstock.lendlibrary.infrastructure.persistence.MemberRepositoryMemory;
+import com.iainhemstock.lendlibrary.domain.shared.Id;
+import com.iainhemstock.lendlibrary.infrastructure.persistence.memory.MemberRepositoryMemory;
 import org.junit.Before;
 import org.junit.Test;
 

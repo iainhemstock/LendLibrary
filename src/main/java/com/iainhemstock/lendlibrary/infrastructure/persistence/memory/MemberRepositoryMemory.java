@@ -21,7 +21,8 @@ public class MemberRepositoryMemory extends MemberRepository {
 
     @Override
     public void add(final Member member) {
-        members.add(member);
+        Member copy = new Member(member);
+        members.add(copy);
     }
 
     @Override
@@ -45,7 +46,7 @@ public class MemberRepositoryMemory extends MemberRepository {
     @Override
     public void update(Member member) {
         int index = IntStream.range(0, members.size())
-                .filter(i -> members.get(i).equals(member))
+                .filter(i -> members.get(i).getId().equals(member.getId()))
                 .findFirst()
                 .orElseThrow(getMemberNotFoundException(member.getId()));
 
