@@ -12,7 +12,7 @@ public class Book implements Entity {
     private final Title title;
     private final Subtitle subtitle;
     private final Author author;
-    private Publisher publisher;
+    private final Publisher publisher;
     private final Year yearPublished;
     private final PageCount pageCount;
     private final Description description;
@@ -98,15 +98,6 @@ public class Book implements Entity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                bookId,
-                isbn,
-                title,
-                subtitle,
-                author,
-                publisher,
-                yearPublished,
-                pageCount,
-                description);
+        return Objects.hash(bookId);
     }
 }

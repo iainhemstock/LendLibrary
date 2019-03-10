@@ -81,6 +81,6 @@ public class Member implements Entity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(memberId, fullName, address, contactDetails);
+        return Objects.hash(memberId);
     }
 }

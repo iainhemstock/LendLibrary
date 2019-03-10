@@ -79,6 +79,6 @@ public class Loan implements Entity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(loanId, bookId, memberId, rentalPeriod);
+        return Objects.hash(loanId);
     }
 }

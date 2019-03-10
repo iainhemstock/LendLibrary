@@ -36,6 +36,6 @@ public final class MemberCard implements Entity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(memberId, fullName);
+        return Objects.hash(memberId);
     }
 }

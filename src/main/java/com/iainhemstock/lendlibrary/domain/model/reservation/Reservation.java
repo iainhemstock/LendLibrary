@@ -54,6 +54,6 @@ public class Reservation implements Entity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(reservationId, bookId, memberId, reservationDate);
+        return Objects.hash(reservationId);
     }
 }
