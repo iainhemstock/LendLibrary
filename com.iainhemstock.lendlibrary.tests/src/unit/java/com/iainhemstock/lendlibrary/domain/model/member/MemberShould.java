@@ -19,7 +19,6 @@ import static org.mockito.Mockito.mock;
 public final class MemberShould {
 
     @Rule public MockitoRule rule = MockitoJUnit.rule();
-    @Mock private MemberId memberId;
 
     @Test
     public void return_its_id() {

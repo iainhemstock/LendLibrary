@@ -7,7 +7,9 @@ public final class DomainDrivenDesignBookDTO extends BookDTO {
                 "0321125215",
                 "Domain Driven Design",
                 "Tackling Complexity in the Heart of Software",
-                4, 4, 2004, 529,
+                "Eric Evans",
+                "Addison Wesley",
+                2004, 529,
                 "The description of Domain Driven Design");
     }
 

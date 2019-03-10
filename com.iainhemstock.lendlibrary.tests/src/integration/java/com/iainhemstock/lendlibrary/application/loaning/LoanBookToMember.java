@@ -23,14 +23,12 @@ public final class LoanBookToMember {
     private LoaningService loaningService;
     private TestableLoanRepositoryMemory loanRepository;
     private TestableClockImpl clock;
-    private LoanDTOAssembler loanDTOAssembler;
 
     @Before
     public void setUp() {
         loanRepository = new TestableLoanRepositoryMemory();
         clock = new TestableClockImpl();
-        loanDTOAssembler = new LoanDTOAssembler();
-        loaningService = new LoaningServiceImpl(loanRepository, clock, loanDTOAssembler);
+        loaningService = new LoaningServiceImpl(loanRepository, clock);
     }
 
     @Test

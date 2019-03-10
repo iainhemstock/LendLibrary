@@ -3,14 +3,11 @@ package com.iainhemstock.lendlibrary.application.reserving;
 import com.iainhemstock.lendlibrary.application.cataloging.CatalogingService;
 import com.iainhemstock.lendlibrary.application.cataloging.dto.HeadFirstDesignPatternsBookDTO;
 import com.iainhemstock.lendlibrary.application.cataloging.impls.CatalogingServiceImpl;
-import com.iainhemstock.lendlibrary.application.cataloging.impls.assembler.BookDTOAssembler;
 import com.iainhemstock.lendlibrary.application.registering.RegisteringService;
 import com.iainhemstock.lendlibrary.application.registering.dto.ColinHartMemberDTO;
 import com.iainhemstock.lendlibrary.application.registering.impls.RegisteringServiceImpl;
-import com.iainhemstock.lendlibrary.application.registering.impls.assembler.MemberDTOAssembler;
 import com.iainhemstock.lendlibrary.application.reserving.dto.ReservationDTO;
 import com.iainhemstock.lendlibrary.application.reserving.impls.ReservingServiceImpl;
-import com.iainhemstock.lendlibrary.application.reserving.impls.assembler.ReservationDTOAssembler;
 import com.iainhemstock.lendlibrary.domain.model.book.BookFactory;
 import com.iainhemstock.lendlibrary.domain.model.member.MemberFactory;
 import com.iainhemstock.lendlibrary.domain.model.reservation.ReservationId;
@@ -37,19 +34,16 @@ public final class AddBookReservation {
     private String bookId;
     private String memberId;
     private TestableClockImpl clock;
-    private ReservationDTOAssembler reservationDTOAssembler;
     private TestableReservationRepositoryMemory reservationRepository;
 
     @Before
     public void setUp() throws Exception {
         clock = new TestableClockImpl();
-        reservationDTOAssembler = new ReservationDTOAssembler();
         reservationRepository = new TestableReservationRepositoryMemory();
-        reservingService = new ReservingServiceImpl(reservationRepository, clock, reservationDTOAssembler);
-        catalogingService = new CatalogingServiceImpl(
-                new BookRepositoryMemory(), new BookFactory(), new BookDTOAssembler());
+        reservingService = new ReservingServiceImpl(reservationRepository, clock);
+        catalogingService = new CatalogingServiceImpl(new BookRepositoryMemory(), new BookFactory());
         registrationService = new RegisteringServiceImpl(
-                new MemberRepositoryMemory(), new MemberFactory(), new MemberDTOAssembler());
+                new MemberRepositoryMemory(), new MemberFactory());
         addBookToCatalog();
         registerNewMember();
     }

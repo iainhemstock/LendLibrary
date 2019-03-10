@@ -6,12 +6,8 @@ import com.iainhemstock.lendlibrary.domain.model.loan.LoanRepository;
 import com.iainhemstock.lendlibrary.infrastructure.persistence.LoanRepositoryShould;
 import org.junit.Test;
 
-import java.util.Date;
-
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public final class LoanRepositoryMemoryShould extends LoanRepositoryShould {
     private LoanRepository loanRepository = new LoanRepositoryMemory();
@@ -22,16 +18,12 @@ public final class LoanRepositoryMemoryShould extends LoanRepositoryShould {
     }
 
     @Test
-    public void create_and_store_a_copy_of_loan_rather_than_reference() {
-        Loan loan = new TestLoan();
+    public void store_a_copy_of_loan_rather_than_reference() {
+        Loan clientSideLoan = new TestLoan();
+        getRepository().add(clientSideLoan);
 
-        getRepository().add(loan);
-
-        loan.finalise(new Date());
-
-        assertThat("expected the two loans to have different actual return dates but they were both the same",
-                getRepository().getById(loan.getId()),
-                is(not(equalTo(loan))));
+        assertThat(getRepository().getById(clientSideLoan.getId()),
+                is(not(sameInstance(clientSideLoan))));
 
     }
 }

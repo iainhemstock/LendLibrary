@@ -11,8 +11,8 @@ public class Book implements Entity {
     private final Isbn isbn;
     private final Title title;
     private final Subtitle subtitle;
-    private final AuthorId authorId;
-    private final PublisherId publisherId;
+    private final Author author;
+    private final Publisher publisher;
     private final Year yearPublished;
     private final PageCount pageCount;
     private final Description description;
@@ -21,8 +21,8 @@ public class Book implements Entity {
                 final Isbn isbn,
                 final Title title,
                 final Subtitle subtitle,
-                final AuthorId authorId,
-                final PublisherId publisherId,
+                final Author author,
+                final Publisher publisher,
                 final Year yearPublished,
                 final PageCount pageCount,
                 final Description description) {
@@ -30,8 +30,8 @@ public class Book implements Entity {
         this.isbn = isbn;
         this.title = title;
         this.subtitle = subtitle;
-        this.authorId = authorId;
-        this.publisherId = publisherId;
+        this.author = author;
+        this.publisher = publisher;
         this.yearPublished = yearPublished;
         this.pageCount = pageCount;
         this.description = description;
@@ -54,12 +54,12 @@ public class Book implements Entity {
         return subtitle;
     }
 
-    public AuthorId getAuthorId() {
-        return authorId;
+    public Author getAuthor() {
+        return this.author;
     }
 
-    public PublisherId getPublisherId() {
-        return publisherId;
+    public Publisher getPublisher() {
+        return this.publisher;
     }
 
     public Year getYearPublished() {
@@ -81,8 +81,8 @@ public class Book implements Entity {
                 ", isbn=" + isbn +
                 ", title=" + title +
                 ", subtitle=" + subtitle +
-                ", authorId=" + authorId +
-                ", publisherId=" + publisherId +
+                ", author=" + author +
+                ", publisher=" + publisher +
                 ", yearPublished=" + yearPublished +
                 ", pageCount=" + pageCount +
                 ", description=" + description +
@@ -92,31 +92,12 @@ public class Book implements Entity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null /*|| getClass() != o.getClass()*/)
-            return false;
-        Book book = (Book) o;
-        return Objects.equals(bookId, book.bookId) &&
-                Objects.equals(isbn, book.isbn) &&
-                Objects.equals(title, book.title) &&
-                Objects.equals(subtitle, book.subtitle) &&
-                Objects.equals(authorId, book.authorId) &&
-                Objects.equals(publisherId, book.publisherId) &&
-                Objects.equals(yearPublished, book.yearPublished) &&
-                Objects.equals(pageCount, book.pageCount) &&
-                Objects.equals(description, book.description);
+        if (o == null) return false;
+        return Objects.equals(bookId, ((Book) o).bookId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                bookId,
-                isbn,
-                title,
-                subtitle,
-                authorId,
-                publisherId,
-                yearPublished,
-                pageCount,
-                description);
+        return Objects.hash(bookId);
     }
 }

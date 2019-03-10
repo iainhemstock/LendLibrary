@@ -30,7 +30,7 @@ public class CatalogingServiceShould {
     public void throw_if_books_service_is_initialized_with_null_book_repository() {
         try {
             new CatalogingServiceImpl(
-                    null, new BookFactory(), new BookDTOAssembler());
+                    null, new BookFactory());
             fail("expected method under test to throw NullPointerException but it didn't");
         }
         catch (NullPointerException ex) {
@@ -42,7 +42,7 @@ public class CatalogingServiceShould {
     public void throw_if_books_service_is_initialized_with_null_book_factory() {
         try {
             new CatalogingServiceImpl(
-                    mock(BookRepository.class), null, new BookDTOAssembler());
+                    mock(BookRepository.class), null);
             fail("expected method under test to throw NullPointerException but it didn't");
         }
         catch (NullPointerException ex) {
@@ -51,22 +51,10 @@ public class CatalogingServiceShould {
     }
 
     @Test
-    public void throw_if_books_service_is_initialized_with_null_book_dto_assembler() {
-        try {
-            new CatalogingServiceImpl(
-                    mock(BookRepository.class), new BookFactory(), null);
-            fail("expected method under test to throw NullPointerException but it didn't");
-        }
-        catch (NullPointerException ex) {
-            assertThat(ex.getMessage(), is(equalTo("Book DTO assembler is required")));
-        }
-    }
-
-    @Test
     public void throw_when_attempting_to_save_null_book() {
         try {
             new CatalogingServiceImpl(
-                    mock(BookRepository.class), new BookFactory(), new BookDTOAssembler())
+                    mock(BookRepository.class), new BookFactory())
                         .addBookToCatalog(null);
             fail("expected method under test to throw NullPointerException but it didn't");
         }
@@ -79,10 +67,11 @@ public class CatalogingServiceShould {
     public void save_book_in_repo_and_return_book_id() {
         BookId bookId = new BookId("id-1234");
         BookRepository bookRepository = mock(BookRepository.class);
-        when(bookRepository.nextId()).thenReturn(bookId);
+        when(bookRepository.nextId())
+                .thenReturn(bookId);
 
         CatalogingService catalogingService = new CatalogingServiceImpl(
-                bookRepository, new BookFactory(), new BookDTOAssembler());
+                bookRepository, new BookFactory());
 
         String addedBookId = catalogingService.addBookToCatalog(
                 new HeadFirstDesignPatternsBookDTO(null));
@@ -98,7 +87,7 @@ public class CatalogingServiceShould {
     public void throw_when_trying_to_fetch_book_with_null_id() {
         try {
             new CatalogingServiceImpl(
-                    mock(BookRepository.class), new BookFactory(), new BookDTOAssembler())
+                    mock(BookRepository.class), new BookFactory())
                         .fetchBook(null);
             fail("expected method under test to throw NullPointerException but it didn't");
         }
@@ -116,7 +105,7 @@ public class CatalogingServiceShould {
                 .when(bookRepository).getById(any(BookId.class));
 
         try {
-            new CatalogingServiceImpl(bookRepository, new BookFactory(), new BookDTOAssembler())
+            new CatalogingServiceImpl(bookRepository, new BookFactory())
                     .fetchBook(absentBookId);
             fail("expected method under test to throw BookNotFoundException but it didn't");
         } catch (BookNotFoundException ex) {
@@ -134,7 +123,7 @@ public class CatalogingServiceShould {
                 .thenReturn(new HeadFirstDesignPatternsBook(bookId.toString()));
 
         BookDTO fetchedBookDTO =
-                new CatalogingServiceImpl(bookRepository, new BookFactory(), new BookDTOAssembler())
+                new CatalogingServiceImpl(bookRepository, new BookFactory())
                         .fetchBook(bookId.toString());
 
         assertThat(fetchedBookDTO,
@@ -144,7 +133,7 @@ public class CatalogingServiceShould {
     @Test
     public void return_empty_list_when_trying_to_fetch_books_that_dont_exist() {
         CatalogingService catalogingService = new CatalogingServiceImpl(
-                mock(BookRepository.class), new BookFactory(), new BookDTOAssembler());
+                mock(BookRepository.class), new BookFactory());
         assertThat(catalogingService.fetchAllBooks(), is(equalTo(Collections.EMPTY_LIST)));
     }
 
@@ -159,7 +148,7 @@ public class CatalogingServiceShould {
                 new HeadFirstDesignPatternsBook(secondBookId)));
 
         List<BookDTO> allFetchedBookDTOS =
-                new CatalogingServiceImpl(bookRepository, new BookFactory(), new BookDTOAssembler())
+                new CatalogingServiceImpl(bookRepository, new BookFactory())
                         .fetchAllBooks();
 
         assertThat(allFetchedBookDTOS.get(0),

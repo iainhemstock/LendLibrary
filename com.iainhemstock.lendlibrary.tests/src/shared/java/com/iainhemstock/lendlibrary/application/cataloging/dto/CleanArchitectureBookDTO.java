@@ -7,11 +7,10 @@ public final class CleanArchitectureBookDTO extends BookDTO {
                 "0134494164",
                 "Clean Architecture",
                 "A Craftman's Guide to Software Structure and Design",
-                1,
-                1,
+                "Robert Martin",
+                "Prentice Hall",
                 2012,
                 404,
                 "The description of the book");
     }
-
 }

@@ -33,7 +33,7 @@ public final class RegisteringServiceShould {
     @Test
     public void throw_if_service_is_initialized_with_null_repository() {
         try {
-            new RegisteringServiceImpl(null, new MemberFactory(), new MemberDTOAssembler());
+            new RegisteringServiceImpl(null, new MemberFactory());
             fail("expected method under test to throw NullPointerException but it didn't");
         }
         catch (NullPointerException ex) {
@@ -44,22 +44,11 @@ public final class RegisteringServiceShould {
     @Test
     public void throw_if_service_is_initialized_with_null_factory() {
         try {
-            new RegisteringServiceImpl(mock(MemberRepository.class), null, new MemberDTOAssembler());
+            new RegisteringServiceImpl(mock(MemberRepository.class), null);
             fail("expected method under test to throw NullPointerException but it didn't");
         }
         catch (NullPointerException ex) {
             assertThat(ex.getMessage(), is(equalTo("Member factory is required")));
-        }
-    }
-
-    @Test
-    public void throw_if_service_is_initialized_with_null_assembler() {
-        try {
-            new RegisteringServiceImpl(mock(MemberRepository.class), new MemberFactory(), null);
-            fail("expected method under test to throw NullPointerException but it didn't");
-        }
-        catch (NullPointerException ex) {
-            assertThat(ex.getMessage(), is(equalTo("Member DTO assembler is required")));
         }
     }
 
@@ -72,7 +61,7 @@ public final class RegisteringServiceShould {
                 .thenReturn(memberId);
 
         RegisteringService registeringService = new RegisteringServiceImpl(
-                memberRepository, new MemberFactory(), new MemberDTOAssembler());
+                memberRepository, new MemberFactory());
 
         String actualMembershipId = registeringService.registerNewMember(
                 new ColinHartMemberDTO(memberId.toString()));
@@ -87,7 +76,7 @@ public final class RegisteringServiceShould {
     @Test
     public void throw_when_trying_to_fetch_member_with_null_id() {
         try {
-            new RegisteringServiceImpl(mock(MemberRepository.class), new MemberFactory(), new MemberDTOAssembler())
+            new RegisteringServiceImpl(mock(MemberRepository.class), new MemberFactory())
                     .fetchMember(null);
             fail("expected method under test to throw NullPointerException but it didn't");
         }
@@ -106,7 +95,7 @@ public final class RegisteringServiceShould {
                 .when(memberRepository).getById(new MemberId(absentMemberId.toString()));
 
         try {
-            new RegisteringServiceImpl(memberRepository, new MemberFactory(), new MemberDTOAssembler())
+            new RegisteringServiceImpl(memberRepository, new MemberFactory())
                     .fetchMember(absentMemberId.toString());
             fail("expected method under test to throw MemberNotFoundException but it didn't");
         } catch (MemberNotFoundException ex) {
@@ -123,7 +112,7 @@ public final class RegisteringServiceShould {
                 .thenReturn(new ColinHartMember(memberId.toString()));
 
         MemberDTO fetchedMemberDTO =
-                new RegisteringServiceImpl(memberRepository, new MemberFactory(), new MemberDTOAssembler())
+                new RegisteringServiceImpl(memberRepository, new MemberFactory())
                         .fetchMember(memberId.toString());
 
         assertThat(fetchedMemberDTO,
@@ -133,7 +122,7 @@ public final class RegisteringServiceShould {
     @Test
     public void return_empty_list_when_trying_to_fetch_members_that_dont_exist() {
         RegisteringServiceImpl registeringService =
-                new RegisteringServiceImpl(mock(MemberRepository.class), new MemberFactory(), new MemberDTOAssembler());
+                new RegisteringServiceImpl(mock(MemberRepository.class), new MemberFactory());
         assertThat(registeringService.fetchAllMembers(),
                 is(equalTo(Collections.EMPTY_LIST)));
     }
@@ -150,7 +139,7 @@ public final class RegisteringServiceShould {
                         new ColinHartMember(secondMemberId)));
 
         List<MemberDTO> allFetchedMemberDTOS =
-                new RegisteringServiceImpl(memberRepository, new MemberFactory(), new MemberDTOAssembler())
+                new RegisteringServiceImpl(memberRepository, new MemberFactory())
                         .fetchAllMembers();
 
         assertThat(allFetchedMemberDTOS.get(0),
@@ -170,7 +159,7 @@ public final class RegisteringServiceShould {
                 .when(memberRepository).getById(absentMemberId);
 
         try {
-            new RegisteringServiceImpl(memberRepository, new MemberFactory(), new MemberDTOAssembler())
+            new RegisteringServiceImpl(memberRepository, new MemberFactory())
                     .updateExistingMember(new AlisonMarlowMemberDTO(absentMemberId.toString()));
             fail("expected method under test to throw MemberNotFoundException but it didn't");
         } catch (MemberNotFoundException ex) {
@@ -181,7 +170,7 @@ public final class RegisteringServiceShould {
     @Test
     public void throw_when_attempting_to_update_member_with_null_details() {
         try {
-            new RegisteringServiceImpl(mock(MemberRepository.class), new MemberFactory(), new MemberDTOAssembler())
+            new RegisteringServiceImpl(mock(MemberRepository.class), new MemberFactory())
                     .updateExistingMember(null);
             fail("expected member under test to throw but it didn't");
         } catch (NullPointerException ex) {
@@ -199,7 +188,7 @@ public final class RegisteringServiceShould {
                 .thenReturn(preUpdatedMember);
 
         RegisteringServiceImpl registeringService =
-                new RegisteringServiceImpl(memberRepository, new MemberFactory(), new MemberDTOAssembler());
+                new RegisteringServiceImpl(memberRepository, new MemberFactory());
 
         registeringService.updateExistingMember(new AlisonMarlowMemberDTO(existingMemberId.toString()));
         MemberDTO postUpdatedMemberDTO = registeringService.fetchMember(existingMemberId.toString());

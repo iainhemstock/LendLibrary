@@ -16,8 +16,8 @@ public class BookDTOAssembler {
                     book.getIsbn().toString(),
                     book.getTitle().toString(),
                     book.getSubtitle().toString(),
-                    Integer.parseInt(book.getAuthorId().toString()),
-                    Integer.parseInt(book.getPublisherId().toString()),
+                    book.getAuthor().toString(),
+                    book.getPublisher().toString(),
                     Integer.parseInt(book.getYearPublished().toString()),
                     Integer.parseInt(book.getPageCount().toString()),
                     book.getDescription().toString());

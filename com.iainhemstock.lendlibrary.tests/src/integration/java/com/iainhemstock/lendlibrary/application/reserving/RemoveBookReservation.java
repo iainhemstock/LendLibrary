@@ -2,7 +2,6 @@ package com.iainhemstock.lendlibrary.application.reserving;
 
 import com.iainhemstock.lendlibrary.application.reserving.dto.ReservationDTO;
 import com.iainhemstock.lendlibrary.application.reserving.impls.ReservingServiceImpl;
-import com.iainhemstock.lendlibrary.application.reserving.impls.assembler.ReservationDTOAssembler;
 import com.iainhemstock.lendlibrary.domain.service.impls.ClockImpl;
 import com.iainhemstock.lendlibrary.infrastructure.persistence.memory.ReservationRepositoryMemory;
 import org.junit.Before;
@@ -20,7 +19,7 @@ public final class RemoveBookReservation {
     @Before
     public void setUp() throws Exception {
         reservingService = new ReservingServiceImpl(
-                new ReservationRepositoryMemory(), new ClockImpl(), new ReservationDTOAssembler());
+                new ReservationRepositoryMemory(), new ClockImpl());
     }
 
     @Test

@@ -10,8 +10,8 @@ public final class HeadFirstDesignPatternsBook extends Book {
                 new Isbn("9780596007126"),
                 new Title("Head First Design Patterns"),
                 new Subtitle("Your brain on design patterns"),
-                new AuthorId(12),
-                new PublisherId(12),
+                new Author("Eric Freeman"),
+                new Publisher("O'Reilly"),
                 new Year(2004),
                 new PageCount(638),
                 new Description("The description of Head First Design Patterns"));

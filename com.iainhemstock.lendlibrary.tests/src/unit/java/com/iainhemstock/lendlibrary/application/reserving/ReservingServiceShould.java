@@ -2,7 +2,6 @@ package com.iainhemstock.lendlibrary.application.reserving;
 
 import com.iainhemstock.lendlibrary.application.reserving.dto.ReservationDTO;
 import com.iainhemstock.lendlibrary.application.reserving.impls.ReservingServiceImpl;
-import com.iainhemstock.lendlibrary.application.reserving.impls.assembler.ReservationDTOAssembler;
 import com.iainhemstock.lendlibrary.domain.model.book.BookId;
 import com.iainhemstock.lendlibrary.domain.model.member.MemberId;
 import com.iainhemstock.lendlibrary.domain.model.reservation.Reservation;
@@ -33,10 +32,27 @@ public final class ReservingServiceShould {
         reservationRepository = mock(ReservationRepository.class);
         clock = mock(Clock.class);
 
-        reservingService = new ReservingServiceImpl(
-                reservationRepository,
-                clock,
-                new ReservationDTOAssembler());
+        reservingService = new ReservingServiceImpl(reservationRepository, clock);
+    }
+
+    @Test
+    public void throw_when_initializing_with_null_repository() {
+        try {
+            new ReservingServiceImpl(null, clock);
+            fail("expected method under test to throw NullPointerException but it didn't");
+        } catch (NullPointerException ex) {
+            assertThat(ex.getMessage(), is(equalTo("Reservation repository is required")));
+        }
+    }
+
+    @Test
+    public void throw_when_initializing_with_null_clock() {
+        try {
+            new ReservingServiceImpl(reservationRepository, null);
+            fail("expected method under test to throw NullPointerException but it didn't");
+        } catch (NullPointerException ex) {
+            assertThat(ex.getMessage(), is(equalTo("Clock is required")));
+        }
     }
 
     @Test

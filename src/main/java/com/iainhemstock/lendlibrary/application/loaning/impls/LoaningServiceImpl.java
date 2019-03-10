@@ -20,12 +20,10 @@ public final class LoaningServiceImpl implements LoaningService {
 
     private LoanRepository loanRepository;
     private Clock clock;
-    private LoanDTOAssembler loanDTOAssembler;
 
-    public LoaningServiceImpl(LoanRepository loanRepository, Clock clock, LoanDTOAssembler loanDTOAssembler) {
+    public LoaningServiceImpl(LoanRepository loanRepository, Clock clock) {
         this.loanRepository = loanRepository;
         this.clock = clock;
-        this.loanDTOAssembler = loanDTOAssembler;
     }
 
     @Override
@@ -59,7 +57,8 @@ public final class LoaningServiceImpl implements LoaningService {
                 .filter(loan -> loan.getActualReturnDate() == null)
                 .collect(Collectors.toList());
 
-        return loanDTOAssembler.toDTOList(outstandingLoans);
+        LoanDTOAssembler assembler = new LoanDTOAssembler();
+        return assembler.toDTOList(outstandingLoans);
     }
 
     @Override
@@ -69,6 +68,7 @@ public final class LoaningServiceImpl implements LoaningService {
                 .filter(loan -> loan.getActualReturnDate() != null)
                 .collect(Collectors.toList());
 
-        return loanDTOAssembler.toDTOList(finalizedLoans);
+        LoanDTOAssembler assembler = new LoanDTOAssembler();
+        return assembler.toDTOList(finalizedLoans);
     }
 }

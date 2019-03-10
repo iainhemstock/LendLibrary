@@ -18,12 +18,12 @@ import static java.util.Objects.requireNonNull;
 public final class ReservingServiceImpl implements ReservingService {
     private ReservationRepository reservationRepository;
     private Clock clock;
-    private ReservationDTOAssembler reservationDTOAssembler;
 
-    public ReservingServiceImpl(ReservationRepository reservationRepository, Clock clock, ReservationDTOAssembler reservationDTOAssembler) {
+    public ReservingServiceImpl(ReservationRepository reservationRepository, Clock clock) {
         this.reservationRepository = reservationRepository;
         this.clock = clock;
-        this.reservationDTOAssembler = reservationDTOAssembler;
+        requireNonNull(this.reservationRepository, "Reservation repository is required");
+        requireNonNull(this.clock, "Clock is required");
     }
 
     @Override
@@ -54,13 +54,15 @@ public final class ReservingServiceImpl implements ReservingService {
     public List<ReservationDTO> fetchReservationsByMember(String memberId) {
         requireNonNull(memberId, "Member id is required");
         List<Reservation> reservationsByMember = reservationRepository.findReservationsByMember(new MemberId(memberId));
-        return reservationDTOAssembler.toDTOList(reservationsByMember);
+        ReservationDTOAssembler assembler = new ReservationDTOAssembler();
+        return assembler.toDTOList(reservationsByMember);
     }
 
     @Override
     public List<ReservationDTO> fetchReservationsByBook(String bookId) {
         requireNonNull(bookId, "Book id is required");
         List<Reservation> reservationsByBook = reservationRepository.findReservationsByBook(new BookId(bookId));
-        return reservationDTOAssembler.toDTOList(reservationsByBook);
+        ReservationDTOAssembler assembler = new ReservationDTOAssembler();
+        return assembler.toDTOList(reservationsByBook);
     }
 }
