@@ -35,8 +35,8 @@ public class CatalogingServiceImpl implements CatalogingService {
                 bookDTO.getIsbn(),
                 bookDTO.getTitle(),
                 bookDTO.getSubtitle(),
-                bookDTO.getAuthorId(),
-                bookDTO.getPublisherId(),
+                bookDTO.getAuthor(),
+                bookDTO.getPublisher(),
                 bookDTO.getYearPublished(),
                 bookDTO.getPageCount(),
                 bookDTO.getDescription());

@@ -30,10 +30,8 @@ public final class MemberCard implements Entity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MemberCard that = (MemberCard) o;
-        return Objects.equals(memberId, that.memberId) &&
-                Objects.equals(fullName, that.fullName);
+        if (o == null) return false;
+        return Objects.equals(memberId, ((MemberCard) o).memberId);
     }
 
     @Override

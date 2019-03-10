@@ -67,7 +67,8 @@ public class CatalogingServiceShould {
     public void save_book_in_repo_and_return_book_id() {
         BookId bookId = new BookId("id-1234");
         BookRepository bookRepository = mock(BookRepository.class);
-        when(bookRepository.nextId()).thenReturn(bookId);
+        when(bookRepository.nextId())
+                .thenReturn(bookId);
 
         CatalogingService catalogingService = new CatalogingServiceImpl(
                 bookRepository, new BookFactory());

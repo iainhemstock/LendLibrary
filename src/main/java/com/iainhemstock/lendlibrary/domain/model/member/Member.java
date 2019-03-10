@@ -76,11 +76,7 @@ public class Member implements Entity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
-        Member that = (Member) o;
-        return Objects.equals(memberId, that.memberId) &&
-                Objects.equals(fullName, that.fullName) &&
-                Objects.equals(address, that.address) &&
-                Objects.equals(contactDetails, that.contactDetails);
+        return Objects.equals(memberId, ((Member) o).memberId);
     }
 
     @Override

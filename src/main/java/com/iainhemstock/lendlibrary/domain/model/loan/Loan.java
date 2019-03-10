@@ -73,13 +73,8 @@ public class Loan implements Entity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null /*|| getClass() != o.getClass()*/)
-            return false;
-        Loan loan = (Loan) o;
-        return Objects.equals(loanId, loan.loanId) &&
-                Objects.equals(bookId, loan.bookId) &&
-                Objects.equals(memberId, loan.memberId) &&
-                Objects.equals(rentalPeriod, loan.rentalPeriod);
+        if (o == null) return false;
+        return Objects.equals(loanId, ((Loan) o).loanId);
     }
 
     @Override

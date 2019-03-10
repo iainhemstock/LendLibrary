@@ -48,13 +48,8 @@ public class Reservation implements Entity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null /*|| getClass() != o.getClass()*/)
-            return false;
-        Reservation that = (Reservation) o;
-        return Objects.equals(reservationId, that.reservationId) &&
-                Objects.equals(bookId, that.bookId) &&
-                Objects.equals(memberId, that.memberId) &&
-                Objects.equals(reservationDate, that.reservationDate);
+        if (o == null) return false;
+        return Objects.equals(reservationId, ((Reservation) o).reservationId);
     }
 
     @Override
