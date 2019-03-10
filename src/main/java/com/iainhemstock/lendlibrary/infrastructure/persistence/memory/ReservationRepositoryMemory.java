@@ -24,7 +24,8 @@ public class ReservationRepositoryMemory extends ReservationRepository {
 
     @Override
     public void add(Reservation reservation) {
-        reservations.add(reservation);
+        Reservation copy = new Reservation(reservation);
+        reservations.add(copy);
     }
 
     @Override

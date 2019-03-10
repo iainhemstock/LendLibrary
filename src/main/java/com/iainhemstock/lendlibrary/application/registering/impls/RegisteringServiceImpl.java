@@ -4,7 +4,6 @@ import com.iainhemstock.lendlibrary.application.registering.RegisteringService;
 import com.iainhemstock.lendlibrary.application.registering.dto.MemberDTO;
 import com.iainhemstock.lendlibrary.application.registering.impls.assembler.MemberDTOAssembler;
 import com.iainhemstock.lendlibrary.domain.model.member.*;
-import com.iainhemstock.lendlibrary.domain.shared.Id;
 
 import java.util.List;
 
@@ -14,16 +13,12 @@ public class RegisteringServiceImpl implements RegisteringService {
 
     private MemberRepository memberRepository;
     private MemberFactory memberFactory;
-    private MemberDTOAssembler memberDTOAssembler;
 
-    public RegisteringServiceImpl(MemberRepository memberRepository, MemberFactory memberFactory,
-                                  MemberDTOAssembler memberDTOAssembler) {
+    public RegisteringServiceImpl(MemberRepository memberRepository, MemberFactory memberFactory) {
         this.memberRepository = memberRepository;
         this.memberFactory = memberFactory;
-        this.memberDTOAssembler = memberDTOAssembler;
         requireNonNull(this.memberRepository, "Member repository is required");
         requireNonNull(this.memberFactory, "Member factory is required");
-        requireNonNull(this.memberDTOAssembler, "Member DTO assembler is required");
     }
 
     @Override
@@ -66,32 +61,36 @@ public class RegisteringServiceImpl implements RegisteringService {
     }
 
     private void relocateMember(Member member, MemberDTO memberDTO) {
-        Address relocatedAddress = new Address(
-                new AddressLine1(memberDTO.getAddressLine1()),
-                new AddressLine2(memberDTO.getAddressLine2()),
-                new City(memberDTO.getCity()),
-                new County(memberDTO.getCounty()),
-                new Postcode(memberDTO.getPostcode()));
+        Address relocatedAddress =
+                new Address(
+                    new AddressLine1(memberDTO.getAddressLine1()),
+                    new AddressLine2(memberDTO.getAddressLine2()),
+                    new City(memberDTO.getCity()),
+                    new County(memberDTO.getCounty()),
+                    new Postcode(memberDTO.getPostcode()));
         member.relocateTo(relocatedAddress);
     }
 
     private void updateContactDetails(Member member, MemberDTO memberDTO) {
-        ContactDetails updatedContactDetails = new ContactDetails(
-                new Telephone(memberDTO.getContactNumber()),
-                new Email(memberDTO.getEmail()));
+        ContactDetails updatedContactDetails =
+                new ContactDetails(
+                    new Telephone(memberDTO.getContactNumber()),
+                    new Email(memberDTO.getEmail()));
         member.updateContactDetailsTo(updatedContactDetails);
     }
 
     @Override
     public List<MemberDTO> fetchAllMembers() {
         List<Member> allMembers = memberRepository.getAll();
-        return memberDTOAssembler.toDTOList(allMembers);
+        MemberDTOAssembler assembler = new MemberDTOAssembler();
+        return assembler.toDTOList(allMembers);
     }
 
     @Override
     public MemberDTO fetchMember(String memberId) throws MemberNotFoundException {
         requireNonNull(memberId, "Member id is required");
         Member member = memberRepository.getById(new MemberId(memberId));
-        return memberDTOAssembler.toDTO(member);
+        MemberDTOAssembler assembler = new MemberDTOAssembler();
+        return assembler.toDTO(member);
     }
 }

@@ -3,9 +3,8 @@ package com.iainhemstock.lendlibrary.application.cataloging;
 import com.iainhemstock.lendlibrary.application.cataloging.dto.BookDTO;
 import com.iainhemstock.lendlibrary.application.cataloging.dto.CleanArchitectureBookDTO;
 import com.iainhemstock.lendlibrary.application.cataloging.impls.CatalogingServiceImpl;
-import com.iainhemstock.lendlibrary.application.cataloging.impls.assembler.BookDTOAssembler;
-import com.iainhemstock.lendlibrary.domain.model.book.*;
-import com.iainhemstock.lendlibrary.domain.shared.Id;
+import com.iainhemstock.lendlibrary.domain.model.book.BookFactory;
+import com.iainhemstock.lendlibrary.domain.model.book.BookId;
 import com.iainhemstock.lendlibrary.infrastructure.persistence.memory.BookRepositoryMemory;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,14 +21,12 @@ public class AddBookToCatalogue {
     private CatalogingService catalogingService;
     private TestableBookRepository testableBookRepository;
     private BookFactory bookFactory;
-    private BookDTOAssembler bookDTOAssembler;
 
     @Before
     public void setUp() {
         testableBookRepository = new TestableBookRepository();
         bookFactory = new BookFactory();
-        bookDTOAssembler = new BookDTOAssembler();
-        catalogingService = new CatalogingServiceImpl(testableBookRepository, bookFactory, bookDTOAssembler);
+        catalogingService = new CatalogingServiceImpl(testableBookRepository, bookFactory);
     }
 
     @Test

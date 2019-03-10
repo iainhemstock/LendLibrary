@@ -28,9 +28,8 @@ public class RegisterNewMember {
     public void setUp() {
         testableMembershipRepository = new TestableMemberRepository();
         MemberFactory memberFactory = new MemberFactory();
-        MemberDTOAssembler memberDTOAssembler = new MemberDTOAssembler();
         registeringService = new RegisteringServiceImpl(
-                testableMembershipRepository, memberFactory, memberDTOAssembler);
+                testableMembershipRepository, memberFactory);
     }
 
     @Test

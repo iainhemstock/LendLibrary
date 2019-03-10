@@ -32,8 +32,7 @@ public final class PrintMemberCard {
         memberDTO = new ColinHartMemberDTO(null);
         memberRepository = new MemberRepositoryMemory();
 
-        registeringService = new RegisteringServiceImpl(memberRepository,
-                new MemberFactory(), new MemberDTOAssembler());
+        registeringService = new RegisteringServiceImpl(memberRepository, new MemberFactory());
 
         memberCardPrinterSpy = new MemberCardPrinterSpy();
         memberCardPrintingService = new MemberCardPrintingServiceImpl(memberCardPrinterSpy, memberRepository);

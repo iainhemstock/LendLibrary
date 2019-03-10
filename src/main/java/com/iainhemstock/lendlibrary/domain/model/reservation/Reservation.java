@@ -21,6 +21,13 @@ public class Reservation implements Entity {
         this.reservationDate = reservationDate;
     }
 
+    public Reservation(Reservation copy) {
+        this.reservationId = copy.reservationId;
+        this.bookId = copy.bookId;
+        this.memberId = copy.memberId;
+        this.reservationDate = new Date(copy.reservationDate.getTime());
+    }
+
     @Override
     public ReservationId getId() {
         return this.reservationId;
@@ -41,7 +48,8 @@ public class Reservation implements Entity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null /*|| getClass() != o.getClass()*/)
+            return false;
         Reservation that = (Reservation) o;
         return Objects.equals(reservationId, that.reservationId) &&
                 Objects.equals(bookId, that.bookId) &&

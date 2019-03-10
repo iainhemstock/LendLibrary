@@ -17,16 +17,12 @@ public class CatalogingServiceImpl implements CatalogingService {
 
     private BookRepository bookRepository;
     private BookFactory bookFactory;
-    private BookDTOAssembler bookDTOAssembler;
 
-    public CatalogingServiceImpl(final BookRepository bookRepository, BookFactory bookFactory,
-                                 BookDTOAssembler bookDTOAssembler) {
+    public CatalogingServiceImpl(final BookRepository bookRepository, BookFactory bookFactory) {
         this.bookRepository = bookRepository;
         this.bookFactory = bookFactory;
-        this.bookDTOAssembler = bookDTOAssembler;
         requireNonNull(this.bookRepository, "Book repository is required");
         requireNonNull(this.bookFactory, "Book factory is required");
-        requireNonNull(this.bookDTOAssembler, "Book DTO assembler is required");
     }
 
     @Override
@@ -52,13 +48,15 @@ public class CatalogingServiceImpl implements CatalogingService {
     @Override
     public List<BookDTO> fetchAllBooks() {
         List<Book> allBooks = bookRepository.getAll();
-        return bookDTOAssembler.toDTOList(allBooks);
+        BookDTOAssembler assembler = new BookDTOAssembler();
+        return assembler.toDTOList(allBooks);
     }
 
     @Override
     public BookDTO fetchBook(final String bookId) {
         requireNonNull(bookId, "Book id is required");
         Book book = bookRepository.getById(new BookId(bookId));
-        return bookDTOAssembler.toDTO(book);
+        BookDTOAssembler assembler = new BookDTOAssembler();
+        return assembler.toDTO(book);
     }
 }

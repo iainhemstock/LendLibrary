@@ -24,8 +24,7 @@ public final class UpdateExistingMember {
     public void setUp() {
         MemberRepository memberRepository = new MemberRepositoryMemory();
         MemberFactory memberFactory = new MemberFactory();
-        MemberDTOAssembler memberDTOAssembler = new MemberDTOAssembler();
-        registeringService = new RegisteringServiceImpl(memberRepository, memberFactory, memberDTOAssembler);
+        registeringService = new RegisteringServiceImpl(memberRepository, memberFactory);
 
         existingMemberId = registeringService.registerNewMember(new ColinHartMemberDTO(null));
     }
@@ -33,21 +32,22 @@ public final class UpdateExistingMember {
     @Test
     public void update_details_of_existing_member() {
         MemberDTO alisonMarlowMemberDTO = new AlisonMarlowMemberDTO(null);
-        String newFirstName = alisonMarlowMemberDTO.getFirstName();
-        String newLastName = alisonMarlowMemberDTO.getLastName();
-        String newAddressLine1 = alisonMarlowMemberDTO.getAddressLine1();
-        String newAddressLine2 = alisonMarlowMemberDTO.getAddressLine2();
-        String newCity = alisonMarlowMemberDTO.getCity();
-        String newCounty = alisonMarlowMemberDTO.getCounty();
-        String newPostcode = alisonMarlowMemberDTO.getPostcode();
-        String newTelephone = alisonMarlowMemberDTO.getContactNumber();
-        String newEmail = alisonMarlowMemberDTO.getEmail();
+        String newFirstName     = alisonMarlowMemberDTO.getFirstName();
+        String newLastName      = alisonMarlowMemberDTO.getLastName();
+        String newAddressLine1  = alisonMarlowMemberDTO.getAddressLine1();
+        String newAddressLine2  = alisonMarlowMemberDTO.getAddressLine2();
+        String newCity          = alisonMarlowMemberDTO.getCity();
+        String newCounty        = alisonMarlowMemberDTO.getCounty();
+        String newPostcode      = alisonMarlowMemberDTO.getPostcode();
+        String newTelephone     = alisonMarlowMemberDTO.getContactNumber();
+        String newEmail         = alisonMarlowMemberDTO.getEmail();
 
-        registeringService.updateExistingMember(new MemberDTO(
-                existingMemberId,
-                newFirstName, newLastName,
-                newAddressLine1, newAddressLine2, newCity, newCounty, newPostcode,
-                newTelephone, newEmail));
+        registeringService.updateExistingMember(
+                new MemberDTO(
+                    existingMemberId,
+                    newFirstName, newLastName,
+                    newAddressLine1, newAddressLine2, newCity, newCounty, newPostcode,
+                    newTelephone, newEmail));
         MemberDTO memberDTO = registeringService.fetchMember(existingMemberId);
 
         assertThat(memberDTO.getMemberId(),

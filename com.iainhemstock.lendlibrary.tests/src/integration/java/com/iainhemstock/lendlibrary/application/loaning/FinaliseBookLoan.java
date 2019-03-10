@@ -2,7 +2,6 @@ package com.iainhemstock.lendlibrary.application.loaning;
 
 import com.iainhemstock.lendlibrary.application.loaning.dto.LoanDTO;
 import com.iainhemstock.lendlibrary.application.loaning.impls.LoaningServiceImpl;
-import com.iainhemstock.lendlibrary.application.loaning.impls.assembler.LoanDTOAssembler;
 import com.iainhemstock.lendlibrary.domain.service.impls.ClockImpl;
 import com.iainhemstock.lendlibrary.infrastructure.persistence.memory.LoanRepositoryMemory;
 import org.junit.Before;
@@ -15,7 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-public final class ReturnBookFromMember {
+public final class FinaliseBookLoan {
 
     private LoaningServiceImpl loaningService;
     private TestableClock clock;
@@ -23,7 +22,7 @@ public final class ReturnBookFromMember {
     @Before
     public void setUp() throws Exception {
         clock = new TestableClock();
-        loaningService = new LoaningServiceImpl(new LoanRepositoryMemory(), clock, new LoanDTOAssembler());
+        loaningService = new LoaningServiceImpl(new LoanRepositoryMemory(), clock);
 
     }
 

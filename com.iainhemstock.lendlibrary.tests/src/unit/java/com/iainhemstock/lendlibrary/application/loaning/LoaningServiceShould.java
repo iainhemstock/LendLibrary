@@ -28,14 +28,12 @@ public final class LoaningServiceShould {
     private LoaningServiceImpl loaningService;
     private LoanRepository loanRepository;
     private Clock clock;
-    private LoanDTOAssembler loanDTOAssembler;
 
     @Before
     public void setUp() throws Exception {
         loanRepository = mock(LoanRepository.class);
         clock = mock(Clock.class);
-        loanDTOAssembler = new LoanDTOAssembler();
-        loaningService = new LoaningServiceImpl(loanRepository, clock, loanDTOAssembler);
+        loaningService = new LoaningServiceImpl(loanRepository, clock);
         calendar = Calendar.getInstance();
         calendar.clear();
     }

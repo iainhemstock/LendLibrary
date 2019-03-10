@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -25,17 +26,12 @@ public final class MemberRepositoryMemoryShould extends MemberRepositoryShould {
     }
 
     @Test
-    public void create_and_store_a_copy_of_member_rather_than_reference() {
-        Member member = new ColinHartMember("id-1234");
+    public void store_a_copy_of_member_rather_than_reference() {
+        Member clientSideMember = new ColinHartMember("id-1234");
+        getRepository().add(clientSideMember);
 
-        getRepository().add(member);
-
-        Address relocatedAddress = new AlisonMarlowMember("id-5678").getAddress();
-        member.relocateTo(relocatedAddress);
-
-        assertThat("expected the two members to have different addresses but they were both the same",
-                getRepository().getById(member.getId()),
-                is(not(equalTo(member))));
+        assertThat(getRepository().getById(clientSideMember.getId()),
+                is(not(sameInstance(clientSideMember))));
 
     }
 }
