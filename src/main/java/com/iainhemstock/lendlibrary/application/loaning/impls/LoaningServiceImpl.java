@@ -21,10 +21,6 @@ public final class LoaningServiceImpl implements LoaningService {
     private LoanRepository loanRepository;
     private Clock clock;
 
-    public LoaningServiceImpl(LoanRepository loanRepository, Clock clock, LoanDTOAssembler loanDTOAssembler) {
-        this(loanRepository, clock);
-    }
-
     public LoaningServiceImpl(LoanRepository loanRepository, Clock clock) {
         this.loanRepository = loanRepository;
         this.clock = clock;

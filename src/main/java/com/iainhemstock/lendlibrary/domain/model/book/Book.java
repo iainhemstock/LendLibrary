@@ -22,17 +22,6 @@ public class Book implements Entity {
                 final Title title,
                 final Subtitle subtitle,
                 final Author author,
-                final Year yearPublished,
-                final PageCount pageCount,
-                final Description description) {
-        this(bookId, isbn, title, subtitle, author, null, yearPublished, pageCount, description);
-    }
-
-    public Book(final BookId bookId,
-                final Isbn isbn,
-                final Title title,
-                final Subtitle subtitle,
-                final Author author,
                 final Publisher publisher,
                 final Year yearPublished,
                 final PageCount pageCount,
